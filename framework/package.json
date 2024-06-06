@@ -18,7 +18,8 @@
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
-    "wujie-vue3": "^1.0.22"
+    "wujie-vue3": "^1.0.22",
+    "jsencrypt": "^3.2.1"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",

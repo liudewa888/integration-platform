@@ -19,7 +19,7 @@
           :index="mdata.meta.path"
           :key="mdata.meta.id"
           @click="menuItemClick(index)"
-          v-for="(mdata, index) in topMenuData"
+          v-for="(mdata, index) in store.topMenus"
         >
           <b>
             {{ mdata.meta.title }}
@@ -96,19 +96,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import logo from '@/assets/images/logo.png';
+import { useMenusStore } from '@/stores/menus';
 const title = ref('| 演示平台');
 const menuActivPath = ref('/');
 // const mainMenuStyle = ref('Top');
-const topMenuData = ref([
-  {
-    meta: { title: '平台一', path: '/', id: 0 }
-  },
-  {
-    meta: { title: '平台二', path: '/2', id: 1 }
-  }
-]);
-const name = ref('admin');
+const store = useMenusStore();
 
+console.log(store.topMenus, 9999);
+
+const name = ref('admin');
 const handleSelect = (index, path, obj) => {};
 const menuItemClick = (index) => {};
 const logout = (index) => {};

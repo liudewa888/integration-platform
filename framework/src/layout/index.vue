@@ -2,7 +2,7 @@
   <div class="flex flex-col h-full">
     <Header></Header>
     <div class="flex-1 flex">
-      <div class="w-[200px] border-[1px] border-solid border-[#ccc]"></div>
+      <Sidebar></Sidebar>
       <div class="flex-1 p-3 h-full">
         <RouterView />
       </div>
@@ -11,4 +11,5 @@
 </template>
 <script setup lang="ts">
 import Header from './components/Header.vue';
+import Sidebar from './components/Sidebar.vue';
 </script>
