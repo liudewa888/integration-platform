@@ -1,27 +1,25 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import Layout from '@/layout/index';
 import { getRoute } from '@/api/user';
 import { useUserStore } from '@/stores/user';
 import { useMenusStore } from '@/stores/menus';
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/',
-      redirect: '/index',
-      component: Layout,
-      children: [
-        {
-          path: '/index',
-          name: 'index',
-          component: () => import('@/views/Home')
-        }
-      ]
-    },
     {
       path: '/login',
       component: () => import('@/views/login/index')
+    },
+    {
+      path: '/',
+      component: Layout,
+      children: [
+        {
+          path: '/:catchAll(.*)',
+          component: () => import('@/views/Home')
+        }
+      ]
     }
   ]
 });
@@ -43,7 +41,7 @@ const filterAsyncRoutes = (data, rootID) => {
       return tree[parentId].map((item) => {
         const node = {};
         node.path = item.Url || '';
-        node.component = item.FuncType === '1' || item.FuncType === '2' ? Layout : Empty;
+        // node.component = item.FuncType === '1' || item.FuncType === '2' ? Layout : Empty;
         node.name = item.FuncCode || '';
         node.funcType = item.FuncType;
         node.parentID = item.ParentID;
@@ -77,7 +75,7 @@ const generateRoutes = async () => {
     SystemCode: systemCode
   });
 
-  const topMenuData = await getRoute({
+  const { menuData: topMenuData } = await getRoute({
     ...data,
     IsAdmin: data.IsAdmin,
     SystemCode: systemCode,
@@ -85,29 +83,35 @@ const generateRoutes = async () => {
   });
 
   return new Promise((resolve) => {
-    let accessedRoutes;
-    let topMenu;
+    let accessedRoutes = [];
+    let topMenus = [];
+    let leftMenus = [];
     if (menuData) {
       accessedRoutes = filterAsyncRoutes(menuData, MenuTopID).sort((a, b) => {
         return a.meta.seqNo - b.meta.seqNo;
       });
+      leftMenus = accessedRoutes.map((item) =>
+        item.children.sort((a, b) => {
+          return a.meta.seqNo - b.meta.seqNo;
+        })
+      );
     }
-    if (topMenuData.menuData) {
-      topMenu = filterAsyncRoutes(topMenuData.menuData, MenuTopID).sort((a, b) => {
+    if (topMenuData) {
+      topMenus = filterAsyncRoutes(topMenuData, MenuTopID).sort((a, b) => {
         return a.meta.seqNo - b.meta.seqNo;
       });
     }
     //这一段逻辑狠重要,如果TOP菜单里面有funcType是的2的,那么就遍历路由数据,找到菜单对应的路由数据,并且给加上一个属性menuType,用来标识此菜单不用加入面包屑,在面包屑组件addTags方法判断中使用
-    topMenu.forEach((item) => {
-      if (item.funcType && item.funcType == 2) {
-        accessedRoutes.forEach((itemRoutes) => {
-          if (item.name == itemRoutes.name) {
-            itemRoutes.meta.menuType = 'noneTags';
-          }
-        });
-      }
-    });
-    resolve({ menus: accessedRoutes, leftMeus: accessedRoutes, topMenus: topMenu });
+    // topMenu.forEach((item) => {
+    //   if (item.funcType && item.funcType == 2) {
+    //     accessedRoutes.forEach((itemRoutes) => {
+    //       if (item.name == itemRoutes.name) {
+    //         itemRoutes.meta.menuType = 'noneTags';
+    //       }
+    //     });
+    //   }
+    // });
+    resolve({ menus: accessedRoutes, leftMenus, topMenus });
   });
 };
 
@@ -118,9 +122,8 @@ router.beforeEach((to, from, next) => {
     next('/login');
   } else {
     if (menusStore.menus && menusStore.menus.length) {
-      console.log(to.path, 'beforeEach');
+      console.log(menusStore.leftMenus, 'leftMenus');
     } else {
-      console.log(to.path, 'generateRoutes');
       generateRoutes().then((res) => {
         menusStore.setTopMenus(res.topMenus);
         menusStore.setLeftMenus(res.leftMenus);

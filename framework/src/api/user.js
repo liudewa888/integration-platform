@@ -1,4 +1,3 @@
-console.log('user');
 import request from './request';
 
 export function login(data) {

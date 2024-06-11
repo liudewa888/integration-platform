@@ -1,6 +1,5 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-console.log('pina', 888);
 import App from './App.vue';
 import router from './router';
 

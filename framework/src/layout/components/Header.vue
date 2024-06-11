@@ -11,18 +11,18 @@
         text-color="#D4DDEA"
         active-text-color="#FFFFFF"
         :ellipsis="false"
-        :default-active="menuActivPath"
+        :default-active="menuActivIndex"
         mode="horizontal"
         @select="handleSelect"
       >
         <el-menu-item
-          :index="mdata.meta.path"
-          :key="mdata.meta.id"
+          :index="index"
+          :key="item.meta.id"
           @click="menuItemClick(index)"
-          v-for="(mdata, index) in store.topMenus"
+          v-for="(item, index) in store.topMenus"
         >
           <b>
-            {{ mdata.meta.title }}
+            {{ item.meta.title }}
           </b>
         </el-menu-item>
       </el-menu>
@@ -97,15 +97,16 @@
 import { ref } from 'vue';
 import logo from '@/assets/images/logo.png';
 import { useMenusStore } from '@/stores/menus';
-const title = ref('| 演示平台');
-const menuActivPath = ref('/');
+const title = ref(window.appConfig.HisName);
+const menuActivIndex = ref(0);
 // const mainMenuStyle = ref('Top');
 const store = useMenusStore();
 
-console.log(store.topMenus, 9999);
-
 const name = ref('admin');
-const handleSelect = (index, path, obj) => {};
+const handleSelect = (index) => {
+  // store.setLeftMenus()
+  store.setTopMenuActiveIndex(index);
+};
 const menuItemClick = (index) => {};
 const logout = (index) => {};
 const dialogUpdatePwd = ref(false);

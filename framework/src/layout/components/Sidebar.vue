@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div
+    v-if="
+      store.leftMenus[store.topMenuActiveIndex] && store.leftMenus[store.topMenuActiveIndex].length
+    "
+  >
     <div class="content">
       <el-menu
         :default-active="activeRoute"
@@ -15,7 +19,7 @@
         @open="handleOpen"
         @close="handleClose"
       >
-        <recursive-menu :menu-data="leftMenuData"></recursive-menu>
+        <recursive-menu :menu-data="store.leftMenus[store.topMenuActiveIndex]"></recursive-menu>
       </el-menu>
     </div>
     <div class="collapse-button">
@@ -30,6 +34,11 @@ import { ref } from 'vue';
 import openImg from '@/assets/images/menu_open.png';
 import closeImg from '@/assets/images/menu_close.png';
 import RecursiveMenu from './RecursiveMenu.vue';
+import { useMenusStore } from '@/stores/menus';
+
+const store = useMenusStore();
+console.log(store.leftMenus, store.topMenuActiveIndex);
+
 const activeRoute = ref('/');
 const isCollapse = ref(false);
 const leftMenuData = ref([

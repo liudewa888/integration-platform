@@ -198,7 +198,11 @@ $cursor: #fff;
     display: inline-block;
     height: 47px;
     width: 85%;
-
+    .el-input__wrapper {
+      width: 100%;
+      box-shadow: none;
+      background-color: transparent;
+    }
     input {
       background: transparent;
       border: 0px;

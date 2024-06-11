@@ -5,6 +5,7 @@ export const useMenusStore = defineStore('menus', () => {
   const menus = ref([]);
   const topMenus = ref([]);
   const leftMenus = ref([]);
+  const topMenuActiveIndex = ref(0);
   // 将数据转换为树形结构
   const setMenus = (val) => {
     menus.value = val;
@@ -15,5 +16,17 @@ export const useMenusStore = defineStore('menus', () => {
   const setLeftMenus = (val) => {
     leftMenus.value = val;
   };
-  return { menus, topMenus, leftMenus, setMenus, setTopMenus, setLeftMenus };
+  const setTopMenuActiveIndex = (val) => {
+    topMenuActiveIndex.value = val;
+  };
+  return {
+    menus,
+    topMenus,
+    leftMenus,
+    setMenus,
+    setTopMenus,
+    setLeftMenus,
+    topMenuActiveIndex,
+    setTopMenuActiveIndex
+  };
 });
