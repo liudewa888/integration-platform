@@ -41,33 +41,6 @@ console.log(store.leftMenus, store.topMenuActiveIndex);
 
 const activeRoute = ref('/');
 const isCollapse = ref(false);
-const leftMenuData = ref([
-  {
-    name: '路径1',
-    path: '/1',
-    children: [
-      {
-        name: '路径11',
-        path: '/11',
-        children: [],
-        meta: {
-          title: '路径11'
-        }
-      }
-    ],
-    meta: {
-      title: '路径1'
-    }
-  },
-  {
-    name: '路径2',
-    path: '/2',
-    children: [],
-    meta: {
-      title: '路径2'
-    }
-  }
-]);
 
 const handleSelect = () => {};
 const handleOpen = () => {};

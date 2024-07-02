@@ -1,15 +1,19 @@
 <template>
-  <WujieVue width="100%" height="100%" :name="url" :url="url + '/'"></WujieVue>
+  <WujieVue width="100%" height="100%" :name="currentProject" :url="url"></WujieVue>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useMenusStore } from '@/stores/menus';
-
+import { useRoute } from 'vue-router';
+const route = useRoute();
 const store = useMenusStore();
 const urls = window.appConfig.iframe_url;
 
-const url = computed(() => {
+const currentProject = computed(() => {
   return urls[store.topMenuActiveIndex];
+});
+const url = computed(() => {
+  return currentProject.value + '/#' + route.fullPath;
 });
 </script>

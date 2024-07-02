@@ -198,7 +198,6 @@ const dialogUpdatePwd = ref(false);
   }
   .navbar-left .knt-logo {
     width: 256px;
-    height: 37px;
     float: left;
     margin: 12px 10px auto 20px;
   }

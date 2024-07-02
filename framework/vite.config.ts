@@ -16,6 +16,7 @@ export default defineConfig({
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx', '.vue']
   },
   server: {
+    port: 8001,
     proxy: {
       '/api': {
         // 选项写法
