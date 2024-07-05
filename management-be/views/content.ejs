@@ -1,0 +1,140 @@
+<% include partials/iframe_header %>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Dashboard
+        <small>Control panel</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-yellow"><i class="fa fa-cog"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">系统总内存</span>
+                    <span class="info-box-number"><%=Math.round((data.totalmem)/(1024*1024*1024)) %>G</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-aqua"><i class="fa fa-thumbs-o-up"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">内存空闲</span>
+                    <span class="info-box-number"><%=(data.freemem/(1024*1024)).toFixed(2)%> MB</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-green"><i class="fa fa-flag-o"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">系统正常运行时间</span>
+                    <span class="info-box-number"><%=parseInt(data.uptime/60)%> min</span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box">
+                <span class="info-box-icon bg-red"><i class="fa fa-star-o"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">系统负载</span>
+                    <span class="info-box-number" style="font-size: 15px;">5分钟：<%=data.loadavg[0].toFixed(2)%></span>
+                    <span class="info-box-number" style="font-size: 13px;">10分钟：<%=data.loadavg[1].toFixed(2)%></span>
+                    <span class="info-box-number" style="font-size: 12px;">15分钟：<%=data.loadavg[2].toFixed(2)%></span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box">
+                <div class="box-header with-border"><h3 class="box-title">登录</h3></div>
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <tbody><tr>
+                            <th style="width: 10px">#</th>
+                            <th>用户名</th>
+                            <th>登录IP</th>
+                            <th>登录时间</th>
+                        </tr>
+                        <% if(login_time.length > 0){ %>
+                        <% login_time.forEach(function(item, index){ %>
+                        <tr>
+                            <td><%=index+1%></td>
+                            <td><%=item.name%></td>
+                            <td><%=item.ip%></td>
+                            <td>
+                                <%=moment(item.login_time).format('YYYY-MM-DD HH:mm:ss')%>
+                            </td>
+                        </tr>
+                        <% })} else{ %>
+                            <tr>
+                                <td colspan="4">暂时数据</td>
+                            </tr>
+                        <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="box">
+                <div class="box-header with-border"><h3 class="box-title">操作记录</h3></div>
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <tbody><tr>
+                            <th style="width: 10px">#</th>
+                            <th>用户名</th>
+                            <th>操作</th>
+                            <th>时间</th>
+                        </tr>
+                        <% if(operation_logs.length > 0){ %>
+                            <% operation_logs.forEach(function(item, index){ %>
+                            <tr>
+                                <td><%=index+1%></td>
+                                <td><%=item.name%></td>
+                                <td><%=item.operations.substr(0,20)%>...</td>
+                                <td>
+                                    <%=moment(item.operate_time).format('YYYY-MM-DD HH:mm:ss')%>
+                                </td>
+                            </tr>
+                        <% })} else{ %>
+                            <tr>
+                                <td colspan="4">暂时数据</td>
+                            </tr>
+                        <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+<!-- /.content -->
+<% include partials/iframe_footer %>
