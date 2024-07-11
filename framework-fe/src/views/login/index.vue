@@ -137,8 +137,8 @@ export default {
           this.loading = true;
           this.loginForm.password = MD5(this.loginForm.password.trim());
           login(this.loginForm)
-            .then((res) => {
-              userStore.setUser(res);
+            .then(({data}) => {
+              userStore.setUser(data);
               this.goToPage();
             })
             .finally(() => {

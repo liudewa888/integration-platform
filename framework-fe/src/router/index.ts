@@ -65,22 +65,18 @@ const filterAsyncRoutes = (data, rootID) => {
 const generateRoutes = async () => {
   const userStore = useUserStore();
   const user = userStore.user;
-  const data = {
-    UserID: user.UserID,
-    IsAdmin: user.IsAdmin
+  const params = {
+    userId: user.id,
+    admin: user.admin,
+    systemCode: systemCode
   };
-  const { menuData } = await getRoute({
-    ...data,
-    IsAdmin: data.IsAdmin,
-    SystemCode: systemCode
-  });
+  const { data:menuData } = await getRoute(params);
 
-  const { menuData: topMenuData } = await getRoute({
-    ...data,
-    IsAdmin: data.IsAdmin,
-    SystemCode: systemCode,
-    MenuLevel: 1
-  });
+  const topMenuData = null
+  // const { menuData: topMenuData } = await getRoute({
+  //   ...params,
+  //   menuLevel: 1
+  // });
 
   return new Promise((resolve) => {
     let accessedRoutes = [];

@@ -56,12 +56,8 @@ export function logout() {
 //   })
 // }
 
-export function getRoute(data) {
-  return request({
-    url: '/api/Menu/GetUserMenu',
-    method: 'post',
-    data
-  });
+export function getRoute(params) {
+  return request.get('/api/getMenus', { params });
 }
 export function GetUserFun(data) {
   return request({

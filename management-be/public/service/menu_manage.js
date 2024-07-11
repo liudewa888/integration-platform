@@ -1,4 +1,11 @@
 var $table = $('#menus');
+const menuTypeDic = {
+  0: '系统',
+  1: '项目',
+  2: '菜单',
+  3: '页面',
+  4: '按钮'
+}
 $(function() {
     $table.bootstrapTable({
         url: '/menus/tree',         //请求后台的URL（*）
@@ -13,13 +20,13 @@ $(function() {
                     }
                 }
             },
-            { field: 'menu_name',  title: '菜单名称',sortable: true },
-            { field: 'menu_flag', title: '唯一标识', align: 'left'},
-            { field: 'menu_url', title: '菜单URL', sortable: true, align: 'left'},
-            { field: 'type', title: '类型' , formatter: 'typeFormatter' },
-            { field: 'menu_icon', title: '菜单图标'},
-            { field: 'created_at',  title: '创建时间', sortable: true,  align: 'left', formatter: 'timeFormatter'  },
-            { field: 'modified_at', title: '修改时间', formatter: 'timeFormatter'},
+            { field: 'menu_name',  title: '名称' },
+            { field: 'system_code',  title: '系统ID'},
+            { field: 'menu_flag', title: '唯一值', align: 'left'},
+            { field: 'menu_url', title: '路由', align: 'left'},
+            { field: 'menu_type', title: '类型' , formatter: 'typeFormatter' },
+            { field: 'menu_icon', title: '图标'},
+            { field: 'menu_order', title: '排序'},
             { field: 'operate', title: '操作', align: 'center', events : operateEvents, formatter: 'operateFormatter' },
         ],
 
@@ -71,17 +78,16 @@ $(function() {
 // 格式化按钮
 function operateFormatter(value, row, index) {
     return [
-        '<button type="button" class="RoleOfadd btn-small  btn-primary" style="margin-right:15px;"><i class="fa fa-plus" ></i>&nbsp;新增</button>',
-        '<button type="button" class="RoleOfedit btn-small   btn-primary" style="margin-right:15px;"><i class="fa fa-pencil-square-o" ></i>&nbsp;修改</button>',
-        '<button type="button" class="RoleOfdelete btn-small   btn-primary" style="margin-right:15px;"><i class="fa fa-trash-o" ></i>&nbsp;删除</button>'
+        '<button type="button" class="RoleOfadd btn-small  btn-primary" style="margin-right:15px;"><i class="fa fa-plus" ></i></button>',
+        '<button type="button" class="RoleOfedit btn-small   btn-primary" style="margin-right:15px;"><i class="fa fa-pencil-square-o" ></i></button>',
+        '<button type="button" class="RoleOfdelete btn-small   btn-primary" style="margin-right:15px;"><i class="fa fa-trash-o" ></i></button>'
     ].join('');
 
 }
+
 // 格式化类型
 function typeFormatter(value, row, index) {
-    if (value == '0') {  return '菜单';  }
-    if (value == '1') {  return '操作按钮'; }
-    return '-';
+    return menuTypeDic[value] || '-';
 }
 // 格式化状态
 function timeFormatter(value, row, index) {

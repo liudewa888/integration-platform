@@ -97,12 +97,14 @@
 import { ref } from 'vue';
 import logo from '@/assets/images/logo.png';
 import { useMenusStore } from '@/stores/menus';
+import { useUserStore } from '@/stores/user';
 const title = ref(window.appConfig.HisName);
 const menuActivIndex = ref(0);
 // const mainMenuStyle = ref('Top');
 const store = useMenusStore();
+const userStore = useUserStore();
 
-const name = ref('admin');
+const name = ref(userStore.user.name);
 const handleSelect = (index) => {
   // store.setLeftMenus()
   store.setTopMenuActiveIndex(index);

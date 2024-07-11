@@ -96,32 +96,32 @@ app.post("/admin/login", async (req, res) => {
   });
 });
 // token验证
-async function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader;
+function authenticateToken(req, res, next) {
+  const token = req.headers["token"];
   if (!token) {
     return res.send(responseFormat(409, null, "需要登录,才能操作"));
   }
-
-  const users = await readUser();
-  const user1 = users.find((item) => {
-    return token === item.token;
-  });
-  if (!user1) {
-    return res.send(responseFormat(401, null, "token无效"));
-  }
-  const token_key = user1.token_key;
-  jwt.verify(token, token_key, (err, decoded) => {
-    if (!err) {
-      const time = getTimeSpan();
-      if (time < decoded.exp) {
-        next();
+  pool.getConnection((err, connection) => {
+    const sql = `select token_key from bs_user WHERE token = '${token}'`;
+    connection.query(sql, (err, result) => {
+      if (!err && result.length) {
+        const key = result[0].token_key;
+        jwt.verify(token, key, (err, decoded) => {
+          if (!err) {
+            const time = getTimeSpan();
+            if (time < decoded.exp) {
+              next();
+            } else {
+              return res.send(responseFormat(401, null, "token过期"));
+            }
+          } else {
+            return res.send(responseFormat(401, null, "token过期"));
+          }
+        });
       } else {
-        return res.send(responseFormat(401, null, "token过期"));
+        return res.send(responseFormat(401, null, "token无效"));
       }
-    } else {
-      return res.send(responseFormat(401, null, "token过期"));
-    }
+    });
   });
 }
 // 获取菜单

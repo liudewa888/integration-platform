@@ -135,7 +135,7 @@ function processQueue() {
   if (activeCount < MAX_COUNT && requestQueue.length) {
     const { config, retryTimes, retryDelay, resolve, reject } = requestQueue.shift();
     activeCount++;
-    request(config)
+    service(config)
       .then((response) => {
         resolve(response);
       })
