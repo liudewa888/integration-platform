@@ -82,8 +82,8 @@
 <script>
 import JSEncrypt from 'jsencrypt';
 import { GetPublicKey, login } from '@/api/user';
-console.log('login');
 import { useUserStore } from '@/stores/user';
+import { MD5 } from '@/assets/js/md5.min.js';
 const userStore = useUserStore();
 export default {
   data() {
@@ -135,32 +135,15 @@ export default {
       this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
           this.loading = true;
-          GetPublicKey().then(async (res) => {
-            await this.getRsaCode(
-              this.loginForm.password,
-              res.key.split('-----END PUBLIC KEY-----')[0] + '-----END PUBLIC KEY-----'
-            );
-
-            var ch = '0',
-              len = this.privateKey.length.toString().length;
-            for (var i = 1; i < 4 - len; i++) ch += '0';
-
-            var kk = ch + this.privateKey.length.toString();
-            var finalKey = this.privateKey + res.key + kk;
-            this.loginForm.password = finalKey;
-            login(this.loginForm)
-              .then((res) => {
-                console.log('login user info', res);
-                userStore.setUser(res);
-                this.goToPage();
-              })
-              .finally(() => {
-                this.loading = false;
-              });
-          });
-        } else {
-          console.log('login error: 用户名或密码格式错误');
-          return false;
+          this.loginForm.password = MD5(this.loginForm.password.trim());
+          login(this.loginForm)
+            .then((res) => {
+              userStore.setUser(res);
+              this.goToPage();
+            })
+            .finally(() => {
+              this.loading = false;
+            });
         }
       });
     },

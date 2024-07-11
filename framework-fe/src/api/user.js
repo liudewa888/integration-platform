@@ -1,15 +1,13 @@
 import request from './request';
 
 export function login(data) {
-  // debugger
   return request({
-    // url: '/api/Login/Login',
-    url: '/api/Login/RSALogin',
+    url: '/api/admin/login',
     method: 'post',
     data: {
       loginType: data.loginType,
-      UserName: data.username,
-      UserPassword: data.password,
+      uname: data.username,
+      password: data.password,
       funcCode: window.appConfig.funcCode,
       systemCode: window.appConfig.systemCode
     }

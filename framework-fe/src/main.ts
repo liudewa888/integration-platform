@@ -5,7 +5,7 @@ import router from './router';
 
 import WujieVue from 'wujie-vue3';
 import ElementPlus from 'element-plus';
-
+import { vueErrorHandler } from '@/utils/errorHandler';
 import 'element-plus/dist/index.css';
 import './assets/css/main.css';
 import './assets/css/tailwind.css';
@@ -15,5 +15,6 @@ app.use(createPinia());
 app.use(router);
 app.use(WujieVue);
 app.use(ElementPlus);
+app.use(vueErrorHandler);
 
 app.mount('#app');

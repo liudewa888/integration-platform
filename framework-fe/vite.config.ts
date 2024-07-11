@@ -20,7 +20,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         // 选项写法
-        target: 'http://localhost:8080',
+        target: 'http://localhost:9082',
         changeOrigin: true,
         rewrite: (path) => {
           path = path.replace(/^\/api/, '');
