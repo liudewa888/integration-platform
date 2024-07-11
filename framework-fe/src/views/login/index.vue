@@ -175,7 +175,7 @@ export default {
     goToPage() {
       this.diaVis = false;
       this.redirect = '/'; //设置默认页面
-      this.$router.push({ path: this.redirect || '/', query: this.otherQuery });
+      this.$router.push({ path: this.redirect, query: this.otherQuery });
     }
   }
 };

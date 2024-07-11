@@ -1,0 +1,21 @@
+{
+    "name": "server-be",
+    "version": "0.1.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "dev": "nodemon app.js"
+    },
+    "author": "liudewa",
+    "license": "ISC",
+    "dependencies": {
+        "compression": "^1.7.4",
+        "crypto": "^1.0.1",
+        "express": "^4.17.2",
+        "jsonwebtoken": "^8.5.1",
+        "mysql": "^2.18.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.15"
+    }
+}
