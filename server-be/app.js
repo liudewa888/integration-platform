@@ -6,6 +6,10 @@ const { readFile } = require("fs/promises");
 const { appConfig } = require("../public/config");
 const { createPassword } = require("./src/utils/utils");
 const app = express();
+app.use((req, res, next) => {
+  console.log("request url: ", req.url);
+  next();
+});
 // app.use((req, res, next) => {
 //   if (req.url.includes("/find")) {
 //     req.url = req.url.replace("/find", "");
@@ -20,6 +24,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 const pool = mysql.createPool(appConfig.dataBase);
+// pool.on("connection", function (connection) {
+//   console.log("数据库连接成功！");
+// });
+// 连接池错误事件监听
+pool.on("error", function (err) {
+  console.error("数据库连接池发生错误：", err);
+});
 // 响应统一格式化
 function responseFormat(code = 200, data = [], msg = "ok") {
   const response = {
@@ -46,16 +57,13 @@ function getTimeSpan() {
   return String(parseInt(new Date().getTime() / 1000));
 }
 
-//
-async function readUser() {
-  const data = await readFile("./user.json");
-  const res = JSON.parse(data);
-  return res;
-}
-
 // 登录
 app.post("/admin/login", async (req, res) => {
   pool.getConnection((err, connection) => {
+    if (err) {
+      res.send(responseFormat(409, [], err.sqlMessage));
+      return;
+    }
     const data = req.body;
     let sql = `SELECT * FROM bs_user WHERE user_name = '${data.uname}' AND is_del=0`;
     connection.query(sql, (err, result) => {
@@ -126,12 +134,26 @@ function authenticateToken(req, res, next) {
 }
 // 获取菜单
 app.get("/getMenus", authenticateToken, async (req, res) => {
+  const query = req.query;
+  if (!query.userId || !query.systemCode) {
+    res.send(responseFormat(409, [], "缺少参数"));
+    return;
+  }
+  console.log('debugger');
+
   pool.getConnection((err, connection) => {
-    const query = req.query;
-    let sql = `select b.* from bs_menu_role a left join bs_menu b on a.menu_id = b.menu_id  left join bs_user_role c on a.role_id = c.role_id where c.user_id = ${query.userId}`;
+    if (err) {
+      res.send(responseFormat(409, [], err.sqlMessage));
+      return;
+    }
+    let sql = `select b.* from bs_menu_role a left join bs_menu b on a.menu_id = b.menu_id  left join bs_user_role c on a.role_id = c.role_id 
+    where c.user_id = ${query.userId} and b.system_code = ${query.systemCode}`;
+    if (query.menuType) {
+      sql = `select b.* from bs_menu_role a left join bs_menu b on a.menu_id = b.menu_id  left join bs_user_role c on a.role_id = c.role_id 
+      where c.user_id = ${query.userId} and b.system_code = ${query.systemCode} and b.menu_type = ${query.menuType}`;
+    }
     connection.query(sql, (err, result) => {
       if (!err) {
-        //若存在结果则表示登陆成功
         if (result) {
           res.send(responseFormat(200, result));
         }

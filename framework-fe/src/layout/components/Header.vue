@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <div class="navbar-left">
-      <img :src="logo" class="knt-logo" />
+      <img :src="logo1" class="knt-logo" />
       <!-- 系统名称 -->
       <span class="title">{{ title }}</span>
     </div>
@@ -98,6 +98,7 @@ import { ref } from 'vue';
 import logo from '@/assets/images/logo.png';
 import { useMenusStore } from '@/stores/menus';
 import { useUserStore } from '@/stores/user';
+const logo1 = ref()
 const title = ref(window.appConfig.HisName);
 const menuActivIndex = ref(0);
 // const mainMenuStyle = ref('Top');
@@ -200,8 +201,10 @@ const dialogUpdatePwd = ref(false);
   }
   .navbar-left .knt-logo {
     width: 256px;
+    height: 37px;
     float: left;
     margin: 12px 10px auto 20px;
+    border: 1px solid #ddd;
   }
   > .iconfont {
     font-size: 24px;

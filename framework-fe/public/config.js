@@ -9,5 +9,5 @@ window.appConfig = {
   EncryptionCount: 32, // 加密位数
   MainMenuStyle: 'Top', // 主菜单显示位置,可选值: Top,Left
   // MenuTopID: '19177' // 菜单在数据库中顶级ID 生产
-  MenuTopID: '92594' // 菜单在数据库中顶级ID 开发
+  MenuTopID: '120' // 菜单在数据库中顶级ID 开发
 };

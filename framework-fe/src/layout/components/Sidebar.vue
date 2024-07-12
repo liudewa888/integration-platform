@@ -37,8 +37,6 @@ import RecursiveMenu from './RecursiveMenu.vue';
 import { useMenusStore } from '@/stores/menus';
 
 const store = useMenusStore();
-console.log(store.leftMenus, store.topMenuActiveIndex);
-
 const activeRoute = ref('/');
 const isCollapse = ref(false);
 

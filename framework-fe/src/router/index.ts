@@ -67,16 +67,34 @@ const generateRoutes = async () => {
   const user = userStore.user;
   const params = {
     userId: user.id,
-    admin: user.admin,
+    // admin: user.admin,
     systemCode: systemCode
   };
-  const { data:menuData } = await getRoute(params);
-
-  const topMenuData = null
-  // const { menuData: topMenuData } = await getRoute({
-  //   ...params,
-  //   menuLevel: 1
-  // });
+  const { data: menuData } = await getRoute(params);
+  menuData.forEach((item) => {
+    item.ParentID = item.parent_id;
+    item.FuncCode = item.menu_id;
+    item.SeqNo = item.menu_order;
+    item.FuncType = item.menu_type;
+    item.Url = item.menu_url;
+    item.FuncName = item.menu_name;
+    item.FuncIcon = item.menu_icon;
+    item.FuncID = item.menu_id;
+  });
+  const { data: topMenuData } = await getRoute({
+    ...params,
+    menuType: 1
+  });
+  topMenuData.forEach((item) => {
+    item.ParentID = item.parent_id;
+    item.FuncCode = item.menu_id;
+    item.SeqNo = item.menu_order;
+    item.FuncType = item.menu_type;
+    item.Url = item.menu_url;
+    item.FuncName = item.menu_name;
+    item.FuncIcon = item.menu_icon;
+    item.FuncID = item.menu_flag;
+  });
 
   return new Promise((resolve) => {
     let accessedRoutes = [];
@@ -86,11 +104,15 @@ const generateRoutes = async () => {
       accessedRoutes = filterAsyncRoutes(menuData, MenuTopID).sort((a, b) => {
         return a.meta.seqNo - b.meta.seqNo;
       });
+      console.log(accessedRoutes,'accessedRoutes');
+
       leftMenus = accessedRoutes.map((item) =>
         item.children.sort((a, b) => {
           return a.meta.seqNo - b.meta.seqNo;
         })
       );
+      console.log(leftMenus,'leftMenus');
+      
     }
     if (topMenuData) {
       topMenus = filterAsyncRoutes(topMenuData, MenuTopID).sort((a, b) => {
