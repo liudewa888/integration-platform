@@ -100,12 +100,17 @@ router.get('/save', async (req, res, next) => {
         var user = req.session.user;
         log.info("save menu params: ", req.query);
         var e_id = req.query.e_id;
+        const e_system_code = req.query.e_system_code;
+        const e_menu_order = req.query.e_menu_order || 0;
         var e_menu_name = req.query.e_menu_name;
         var e_parent_id = req.query.e_parent_id;
         var e_menu_url = req.query.e_menu_url;
         var e_menu_icon = req.query.e_menu_icon;
         var e_type = req.query.e_type || 0;
         var e_menu_flag = req.query.e_menu_flag;
+        if (e_system_code == "" || e_system_code.trim() == "") {
+            result.msg = "系统ID不能为空";
+        }
         if (e_menu_name == "" || e_menu_name.trim() == "") {
             result.msg = "菜单名称不能为空";
         }
@@ -117,15 +122,16 @@ router.get('/save', async (req, res, next) => {
                 var menus = await mysql.query(sql, e_menu_flag);
                 if (((!e_id || e_id == 0) && menus.length > 0) || (e_id && e_id != 0 && menus.length > 0 && e_id != menus[0]['menu_id'])) {
                         result.error = 1;
-                        result.msg = "菜单唯一标识已经存在！";
+                        result.msg = "菜单唯一值已经存在！";
                         res.status(200).json(result);
                         return;
                 }
             }
             var ret, sql;
             if (e_id && e_id != 0) {
-                sql = "update bs_menu set menu_name=?,parent_id=?,menu_url=?,menu_icon=?, menu_flag=?, type=?, modified_id=?, modified_at=? where menu_id=?";
-                var params = [e_menu_name, e_parent_id, e_menu_url, e_menu_icon, e_menu_flag, e_type, user.id, new Date(), e_id];
+                sql = "update bs_menu set menu_name=?,system_code=?,parent_id=?,menu_url=?,menu_icon=?, menu_flag=?, menu_type=?, menu_order=?, modified_id=?, modified_at=? where menu_id=?";
+                var params = [e_menu_name, e_system_code, e_parent_id, e_menu_url, e_menu_icon, e_menu_flag, e_type, e_menu_order,user.id, new Date(), e_id];
+                console.log(params,'sql');
                 ret = await mysql.query(sql, params);
                 await common.saveOperateLog(req, "更新菜单：" + e_menu_name + ";ID: " + e_id);
             } else {
@@ -135,8 +141,8 @@ router.get('/save', async (req, res, next) => {
                     result.error = 1;
                     result.msg = "菜单名已经存在！";
                 } else {
-                    sql = "insert bs_menu(menu_name, parent_id,menu_url,menu_icon,menu_flag,type,creator_id) values (?,?,?,?,?,?,?)";
-                    ret = await mysql.query(sql, [e_menu_name, e_parent_id, e_menu_url, e_menu_icon,e_menu_flag,e_type, user.id]);
+                    sql = "insert bs_menu(menu_name, system_code,parent_id,menu_url,menu_icon,menu_flag,menu_type,menu_order,creator_id) values (?,?,?,?,?,?,?,?,?)";
+                    ret = await mysql.query(sql, [e_menu_name, e_system_code,e_parent_id, e_menu_url, e_menu_icon,e_menu_flag,e_type, e_menu_order,user.id]);
                     await common.saveOperateLog(req, "新增菜单：" + e_menu_name);
                 }
             }
@@ -146,7 +152,7 @@ router.get('/save', async (req, res, next) => {
         }
         res.status(200).json(result);
     } catch (e) {
-        log.error("save menu ret:", e);
+        log.error("save menu ret:", JSON.stringify(e));
         result.error = 1;
         result.msg = "保存失败，请联系管理员";
         res.status(200).json(result);
