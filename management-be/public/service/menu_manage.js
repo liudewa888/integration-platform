@@ -24,6 +24,7 @@ $(function () {
         },
       },
       { field: "menu_name", title: "名称" },
+      { field: "menu_id", title: "菜单ID" },
       { field: "system_code", title: "系统ID" },
       { field: "menu_flag", title: "唯一值", align: "left" },
       { field: "menu_url", title: "路由", align: "left" },

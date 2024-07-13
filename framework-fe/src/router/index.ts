@@ -3,6 +3,7 @@ import Layout from '@/layout/index';
 import { getRoute } from '@/api/user';
 import { useUserStore } from '@/stores/user';
 import { useMenusStore } from '@/stores/menus';
+import { useAppStore } from '@/stores/app';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -26,7 +27,16 @@ const router = createRouter({
 
 const systemCode = window.appConfig.systemCode;
 const MenuTopID = window.appConfig.MenuTopID;
-
+const transformProperty = (item) => {
+  item.ParentID = item.parent_id;
+  item.FuncCode = item.menu_id;
+  item.SeqNo = item.menu_order;
+  item.FuncType = item.menu_type;
+  item.Url = item.menu_url;
+  item.FuncName = item.menu_name;
+  item.FuncIcon = item.menu_icon;
+  item.FuncID = item.menu_id;
+};
 const filterAsyncRoutes = (data, rootID) => {
   const tree = {};
   data.forEach((item) => {
@@ -41,7 +51,6 @@ const filterAsyncRoutes = (data, rootID) => {
       return tree[parentId].map((item) => {
         const node = {};
         node.path = item.Url || '';
-        // node.component = item.FuncType === '1' || item.FuncType === '2' ? Layout : Empty;
         node.name = item.FuncCode || '';
         node.funcType = item.FuncType;
         node.parentID = item.ParentID;
@@ -64,6 +73,7 @@ const filterAsyncRoutes = (data, rootID) => {
 };
 const generateRoutes = async () => {
   const userStore = useUserStore();
+  const appStore = useAppStore();
   const user = userStore.user;
   const params = {
     userId: user.id,
@@ -71,41 +81,25 @@ const generateRoutes = async () => {
     systemCode: systemCode
   };
   const { data: menuData } = await getRoute(params);
-  menuData.forEach((item) => {
-    item.ParentID = item.parent_id;
-    item.FuncCode = item.menu_id;
-    item.SeqNo = item.menu_order;
-    item.FuncType = item.menu_type;
-    item.Url = item.menu_url;
-    item.FuncName = item.menu_name;
-    item.FuncIcon = item.menu_icon;
-    item.FuncID = item.menu_id;
-  });
+  if (menuData && menuData.length) {
+    appStore.setSystemName(menuData[0].menu_name);
+  }
+  menuData.forEach(transformProperty);
   const { data: topMenuData } = await getRoute({
     ...params,
     menuType: 1
   });
-  topMenuData.forEach((item) => {
-    item.ParentID = item.parent_id;
-    item.FuncCode = item.menu_id;
-    item.SeqNo = item.menu_order;
-    item.FuncType = item.menu_type;
-    item.Url = item.menu_url;
-    item.FuncName = item.menu_name;
-    item.FuncIcon = item.menu_icon;
-    item.FuncID = item.menu_flag;
-  });
+  topMenuData.forEach(transformProperty);
 
   return new Promise((resolve) => {
     let accessedRoutes = [];
     let topMenus = [];
     let leftMenus = [];
-    if (menuData) {
+    if (menuData && menuData.length) {
       accessedRoutes = filterAsyncRoutes(menuData, MenuTopID).sort((a, b) => {
         return a.meta.seqNo - b.meta.seqNo;
       });
       console.log(accessedRoutes, 'accessedRoutes');
-
       leftMenus = accessedRoutes.map((item) =>
         item.children.sort((a, b) => {
           return a.meta.seqNo - b.meta.seqNo;
@@ -113,21 +107,11 @@ const generateRoutes = async () => {
       );
       console.log(leftMenus, 'leftMenus');
     }
-    if (topMenuData) {
+    if (topMenuData && topMenuData.length) {
       topMenus = filterAsyncRoutes(topMenuData, MenuTopID).sort((a, b) => {
         return a.meta.seqNo - b.meta.seqNo;
       });
     }
-    //这一段逻辑狠重要,如果TOP菜单里面有funcType是的2的,那么就遍历路由数据,找到菜单对应的路由数据,并且给加上一个属性menuType,用来标识此菜单不用加入面包屑,在面包屑组件addTags方法判断中使用
-    // topMenu.forEach((item) => {
-    //   if (item.funcType && item.funcType == 2) {
-    //     accessedRoutes.forEach((itemRoutes) => {
-    //       if (item.name == itemRoutes.name) {
-    //         itemRoutes.meta.menuType = 'noneTags';
-    //       }
-    //     });
-    //   }
-    // });
     resolve({ menus: accessedRoutes, leftMenus, topMenus });
   });
 };

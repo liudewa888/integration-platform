@@ -139,13 +139,13 @@ app.get("/getMenus", authenticateToken, async (req, res) => {
     res.send(responseFormat(409, [], "缺少参数"));
     return;
   }
-  console.log('debugger');
-
   pool.getConnection((err, connection) => {
     if (err) {
+      console.log("debugger", err);
       res.send(responseFormat(409, [], err.sqlMessage));
       return;
     }
+    console.log("debugger", "pool.getConnection");
     let sql = `select b.* from bs_menu_role a left join bs_menu b on a.menu_id = b.menu_id  left join bs_user_role c on a.role_id = c.role_id 
     where c.user_id = ${query.userId} and b.system_code = ${query.systemCode}`;
     if (query.menuType) {

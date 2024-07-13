@@ -3,7 +3,7 @@
     <div class="navbar-left">
       <img :src="logo1" class="knt-logo" />
       <!-- 系统名称 -->
-      <span class="title">{{ title }}</span>
+      <span class="title">{{ appStore.systemName }}</span>
     </div>
     <div class="navbar-center">
       <el-menu
@@ -14,6 +14,7 @@
         :default-active="menuActivIndex"
         mode="horizontal"
         @select="handleSelect"
+        v-if="showTopMenu"
       >
         <el-menu-item
           :index="index"
@@ -98,12 +99,14 @@ import { ref } from 'vue';
 import logo from '@/assets/images/logo.png';
 import { useMenusStore } from '@/stores/menus';
 import { useUserStore } from '@/stores/user';
-const logo1 = ref()
-const title = ref(window.appConfig.HisName);
-const menuActivIndex = ref(0);
-// const mainMenuStyle = ref('Top');
+import { useAppStore } from '@/stores/app';
 const store = useMenusStore();
 const userStore = useUserStore();
+const appStore = useAppStore();
+const showTopMenu = ref(window.appConfig.showTopMenu)
+const logo1 = ref()
+const menuActivIndex = ref(0);
+// const mainMenuStyle = ref('Top');
 
 const name = ref(userStore.user.name);
 const handleSelect = (index) => {
