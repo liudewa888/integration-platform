@@ -104,15 +104,14 @@ const generateRoutes = async () => {
       accessedRoutes = filterAsyncRoutes(menuData, MenuTopID).sort((a, b) => {
         return a.meta.seqNo - b.meta.seqNo;
       });
-      console.log(accessedRoutes,'accessedRoutes');
+      console.log(accessedRoutes, 'accessedRoutes');
 
       leftMenus = accessedRoutes.map((item) =>
         item.children.sort((a, b) => {
           return a.meta.seqNo - b.meta.seqNo;
         })
       );
-      console.log(leftMenus,'leftMenus');
-      
+      console.log(leftMenus, 'leftMenus');
     }
     if (topMenuData) {
       topMenus = filterAsyncRoutes(topMenuData, MenuTopID).sort((a, b) => {
@@ -136,6 +135,10 @@ const generateRoutes = async () => {
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
   const menusStore = useMenusStore();
+  if (to.path === '/login') {
+    next();
+    return;
+  }
   if (!userStore.getUser() && to.path !== '/login') {
     next('/login');
   } else {

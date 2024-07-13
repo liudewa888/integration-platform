@@ -25,9 +25,9 @@ router.get('/get_menu', async (req, res, next) => {
     try {
         var role_id = req.query.role_id;
         // 角色 role_id 能看到和操作菜单权限
-        var sql = "select a.menu_id from bs_menu a inner join bs_menu_role b on a.menu_id=b.menu_id where b.role_id=? and a.is_del=0";
+        var sql = "select a.menu_id from bs_menu a inner join bs_menu_role b on a.menu_id=b.menu_id where b.role_id=? and a.is_del=0 and system_code is not null";
         // 所有菜单权限
-        var sql2 = "select * from bs_menu where is_del=0 order by parent_id asc , menu_id asc";
+        var sql2 = "select * from bs_menu where is_del=0 and system_code is not null order by parent_id asc , menu_id asc";
         var menuIds = await mysql.query(sql, role_id);
         var menus = await mysql.query(sql2);
         //result.data['menus'] = menus;//stringUtils.MenuRecursion(menus, 0);

@@ -76,17 +76,18 @@ router.get('/tree', async (req, res, next) => {
         data: {}
     };
     try {
-        var sql = "select * from bs_menu where is_del=0 ";
+        var sql = "select * from bs_menu where is_del=0 and system_code is not null";
         if(tree) {
             sql = sql + " and type = 0 "
         }
-        sql = sql + "order by parent_id asc , menu_id asc";
+        sql = sql + " order by parent_id asc , menu_id asc";
         var menus = await mysql.query(sql);
         result.data = menus;
         res.status(200).json(result);
 
     } catch (e) {
         result.error = 1;
+        console.log('sql error',JSON.stringify(e));
         res.status(500).json(result);
     }
 });
