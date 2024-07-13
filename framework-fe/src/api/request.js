@@ -4,7 +4,8 @@ import { useUserStore } from '@/stores/user';
 import router from '../router';
 const service = axios.create({
   baseURL: '',
-  timeout: 10000 // request timeout
+  timeout: 1000 * 10 * 3,
+  withCredentials: true
 });
 
 // request interceptor
