@@ -6,9 +6,10 @@ const menuTypeDic = {
   3: "页面",
   4: "按钮",
 };
-$(function () {
+const initTable = () => {
+  const url = "/menus/tree";
   $table.bootstrapTable({
-    url: "/menus/tree", //请求后台的URL（*）
+    url, //请求后台的URL（*）
     method: "get", //请求方式（*）
     idField: "menu_id",
     columns: [
@@ -39,15 +40,12 @@ $(function () {
         formatter: "operateFormatter",
       },
     ],
-
     // bootstrap-table-treegrid.js 插件配置 -- start
     //在哪一列展开树形
     treeShowField: "menu_name",
     //指定父id列
     parentIdField: "parent_id",
-
     onResetView: function (data) {
-      //console.log('load');
       $table.treegrid({
         initialState: "collapsed", // 所有节点都折叠
         // initialState: 'expanded',// 所有节点都展开，默认展开
@@ -80,7 +78,7 @@ $(function () {
     },
     // bootstrap-table-treetreegrid.js 插件配置 -- end
   });
-});
+};
 
 // 格式化按钮
 function operateFormatter(value, row, index) {
@@ -104,9 +102,12 @@ function timeFormatter(value, row, index) {
 window.operateEvents = {
   "click .RoleOfadd": function (e, value, row, index) {
     const data = {
-        parent_id: row.menu_id,
-        system_code: row.system_code,
-    }
+      parent_id: row.menu_id,
+      system_code: row.system_code,
+      menu_type: row.menu_type,
+      menu_id: row.menu_id,
+      type: "add",
+    };
     add(data);
   },
   "click .RoleOfdelete": function (e, value, row, index) {
@@ -193,11 +194,57 @@ function update(data) {
   });
   initForm(modal, data);
 }
-
-var initForm = function (modal, data) {
+const initSystemSelect = function () {
+  let url = `/menus/tree?tree=0&menu_type=0`;
   $.ajax({
     type: "get",
-    url: "/menus/tree?tree=1",
+    url,
+    asyc: false,
+    error: function (error) {
+      new Noty({
+        type: "error",
+        layout: "topCenter",
+        text: "内部错误，请稍后再试",
+        timeout: "5000",
+      }).show();
+    },
+    success: function (result) {
+      if (result.error) {
+        new Noty({
+          type: "error",
+          layout: "topCenter",
+          text: result.msg,
+          timeout: "5000",
+        }).show();
+      } else {
+        var res = result.data;
+        var auxArr = [];
+        auxArr[0] = "<option value='0'>全部系统</option>";
+        // 添加选项
+        for (var i = 0; i < res.length; i++) {
+          const system_code = res[i]["system_code"];
+          auxArr[i + 1] =
+            "<option value='" +
+            system_code +
+            "'>" +
+            res[i]["menu_name"] +
+            "</option>";
+        }
+        $("#e_system_code").html(auxArr.join(""));
+      }
+    },
+  });
+};
+
+var initForm = function (modal, data) {
+  console.log(data, "data");
+  let url = `/menus/tree?tree=1&system_code=${data.system_code}&menu_type=${data.menu_type}`;
+  if (data.type === "add") {
+    url = `/menus/tree?tree=2&menu_id=${data.menu_id}`;
+  }
+  $.ajax({
+    type: "get",
+    url,
     asyc: false,
     error: function (error) {
       new Noty({
@@ -236,7 +283,6 @@ var initForm = function (modal, data) {
         }
         $("#e_parent_id").html(auxArr.join(""));
         if (data) {
-            console.log(data, "data");
           modal.find(".modal-body input#e_id").val(data.menu_id || 0);
           modal
             .find(".modal-body input#e_system_code")
@@ -395,6 +441,18 @@ $("#menu_batch_remove").on("click", function () {
   }
   removeData(ids.join(","));
 });
+
+$("#e_system_code").on("change", function () {
+  const system_code = $(this).val();
+  let url = '/menus/tree'
+  if (Number(system_code)) {
+    url = `/menus/tree?system_code=${system_code}`;
+  }
+  $table.bootstrapTable("refresh", {
+    url,
+    silent: true,
+  });
+});
 var removeData = function (id) {
   var n = new Noty({
     text: "你要继续吗?",
@@ -418,3 +476,8 @@ var removeData = function (id) {
     ],
   }).show();
 };
+
+$(function () {
+  initSystemSelect();
+  initTable();
+});
