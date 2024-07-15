@@ -2,7 +2,6 @@ const express = require("express");
 const mysql = require("mysql");
 const jwt = require("jsonwebtoken");
 const compression = require("compression");
-const { readFile } = require("fs/promises");
 const { appConfig } = require("../public/config");
 const { createPassword } = require("./src/utils/utils");
 const app = express();
@@ -93,6 +92,7 @@ app.post("/admin/login", async (req, res) => {
             } else {
               res.send(responseFormat(409, [], err.sqlMessage));
             }
+            connection.release();
           });
         } else {
           res.send(responseFormat(409, [], "用户名不存在"));
@@ -139,6 +139,7 @@ app.get("/getMenus", authenticateToken, async (req, res) => {
     res.send(responseFormat(409, [], "缺少参数"));
     return;
   }
+  console.log("debugger", "pool.getConnection start");
   pool.getConnection((err, connection) => {
     if (err) {
       console.log("debugger", err);
@@ -160,6 +161,7 @@ app.get("/getMenus", authenticateToken, async (req, res) => {
       } else {
         res.send(responseFormat(409, [], err.sqlMessage));
       }
+      connection.release();
     });
   });
 });

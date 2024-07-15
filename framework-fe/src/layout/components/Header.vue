@@ -11,7 +11,7 @@
         text-color="#D4DDEA"
         active-text-color="#FFFFFF"
         :ellipsis="false"
-        :default-active="menuActivIndex"
+        :default-active="topMenusActivIndex"
         mode="horizontal"
         @select="handleSelect"
         v-if="showTopMenu"
@@ -19,8 +19,7 @@
         <el-menu-item
           :index="index"
           :key="item.meta.id"
-          @click="menuItemClick(index)"
-          v-for="(item, index) in store.topMenus"
+          v-for="(item, index) in menusStore.topMenus"
         >
           <b>
             {{ item.meta.title }}
@@ -37,12 +36,12 @@
           </span>
           <template v-slot:dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>
+              <!-- <el-dropdown-item>
                 <div class="right-menu-item" @click="dialogUpdatePwd = true">
                   <svg-icon :iconClass="'lock'" />
                   修改密码
                 </div>
-              </el-dropdown-item>
+              </el-dropdown-item> -->
               <el-dropdown-item>
                 <div class="right-menu-item" @click="logout">
                   <svg-icon :iconClass="'switch'" />
@@ -96,26 +95,41 @@
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import logo from '@/assets/images/logo.png';
 import { useMenusStore } from '@/stores/menus';
 import { useUserStore } from '@/stores/user';
 import { useAppStore } from '@/stores/app';
-const store = useMenusStore();
+const router = useRouter();
+const menusStore = useMenusStore();
 const userStore = useUserStore();
 const appStore = useAppStore();
-const showTopMenu = ref(window.appConfig.showTopMenu)
-const logo1 = ref()
-const menuActivIndex = ref(0);
-// const mainMenuStyle = ref('Top');
+const showTopMenu = ref(window.appConfig.showTopMenu);
+const logo1 = ref();
+const topMenusActivIndex = ref(0);
 
 const name = ref(userStore.user.name);
 const handleSelect = (index) => {
-  // store.setLeftMenus()
-  store.setTopMenuActiveIndex(index);
+  menusStore.setTopMenuActiveIndex(index);
+  const menu = menusStore.topMenus[index];
+  router.push(menu.path);
 };
-const menuItemClick = (index) => {};
-const logout = (index) => {};
-const dialogUpdatePwd = ref(false);
+const clearAllCookie = () => {
+  const date = new Date();
+  date.setTime(date.getTime() - 10000);
+  const keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+  if (keys) {
+    for (var i = keys.length; i--; )
+      document.cookie = keys[i] + '=0; expire=' + date.toGMTString() + '; path=/';
+  }
+};
+const logout = async () => {
+  clearAllCookie();
+  userStore.removeUser();
+  router.push(`/login`);
+};
+
+topMenusActivIndex.value = menusStore.topMenuActiveIndex;
 </script>
 <style lang="scss" scoped>
 .el-menu-item.is-active {

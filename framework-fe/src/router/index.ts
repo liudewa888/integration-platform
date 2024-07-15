@@ -14,6 +14,7 @@ const router = createRouter({
     },
     {
       path: '/',
+      redirect: '/home',
       component: Layout,
       children: [
         {
@@ -99,13 +100,11 @@ const generateRoutes = async () => {
       accessedRoutes = filterAsyncRoutes(menuData, MenuTopID).sort((a, b) => {
         return a.meta.seqNo - b.meta.seqNo;
       });
-      console.log(accessedRoutes, 'accessedRoutes');
       leftMenus = accessedRoutes.map((item) =>
         item.children.sort((a, b) => {
           return a.meta.seqNo - b.meta.seqNo;
         })
       );
-      console.log(leftMenus, 'leftMenus');
     }
     if (topMenuData && topMenuData.length) {
       topMenus = filterAsyncRoutes(topMenuData, MenuTopID).sort((a, b) => {
@@ -115,8 +114,19 @@ const generateRoutes = async () => {
     resolve({ menus: accessedRoutes, leftMenus, topMenus });
   });
 };
+function findPath(list, targetPath) {
+  for (let obj of list) {
+    if (obj.path === targetPath) {
+      return true;
+    }
+    if (obj.children && obj.children.length) {
+      return findPath(obj.children, targetPath);
+    }
+  }
+  return false;
+}
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
   const menusStore = useMenusStore();
   if (to.path === '/login') {
@@ -128,13 +138,27 @@ router.beforeEach((to, from, next) => {
   } else {
     if (menusStore.menus && menusStore.menus.length) {
       console.log(menusStore.leftMenus, 'leftMenus');
+      const activeProjectIndex = menusStore.topMenuActiveIndex;
+      const menus = menusStore.menus;
+      const currentMenus = menus[activeProjectIndex];
+      console.log(currentMenus, to.path, 'to.path');
+      const hasPath = findPath([currentMenus], to.path);
+      console.log(hasPath, 'hasPath');
+
+      if (hasPath) {
+        menusStore.setLeftMenusActiveRoute(to.path);
+        next();
+      } else {
+        menusStore.setTopMenuActiveIndex(0);
+        next('/');
+      }
     } else {
-      generateRoutes().then((res) => {
-        menusStore.setTopMenus(res.topMenus);
-        menusStore.setLeftMenus(res.leftMenus);
-      });
+      const res = await generateRoutes();
+      menusStore.setMenus(res.menus);
+      menusStore.setTopMenus(res.topMenus);
+      menusStore.setLeftMenus(res.leftMenus);
+      next();
     }
-    next();
   }
 });
 

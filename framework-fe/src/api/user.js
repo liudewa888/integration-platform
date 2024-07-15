@@ -23,11 +23,9 @@ export function GetPublicKey(data) {
 
 export function ssoLogin(data) {
   return request({
-    url: '/api/Login/SSOLogin',
+    url: '/api/admin/SSOLogin',
     method: 'post',
     data: {
-      // systemCode: data.systemCode,
-      // funcCode: data.funcCode
       funcCode: window.appConfig.funcCode,
       systemCode: window.appConfig.systemCode,
       sso_token: sessionStorage.getItem('sso_token')

@@ -19,7 +19,8 @@
       </div>
       <el-form-item prop="username">
         <span class="svg-container">
-          <svg-icon icon-class="user" />
+          <!-- <svg-icon icon-class="user" /> -->
+          <el-icon :size="20"><User /></el-icon>
         </span>
         <el-input
           ref="username"
@@ -34,7 +35,8 @@
 
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password" />
+          <!-- <svg-icon icon-class="password" /> -->
+          <el-icon :size="18"><Lock /></el-icon>
         </span>
         <el-input
           :key="passwordType"
@@ -48,7 +50,9 @@
           @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+          <!-- <svg-icon :icon-class="passwordType === 'password' ? 'TurnOff' : 'eye-open'" /> -->
+          <el-icon :size="18" v-if="passwordType === 'password'"><TurnOff /></el-icon>
+          <el-icon :size="18" v-else><Open /></el-icon>
         </span>
       </el-form-item>
 
@@ -80,12 +84,18 @@
 </template>
 
 <script>
-import JSEncrypt from 'jsencrypt';
-import { GetPublicKey, login } from '@/api/user';
+import { User, Lock, TurnOff, Open } from '@element-plus/icons-vue';
+import { login } from '@/api/user';
 import { useUserStore } from '@/stores/user';
 import { MD5 } from '@/assets/js/md5.min.js';
 const userStore = useUserStore();
 export default {
+  components: {
+    User,
+    Lock,
+    TurnOff,
+    Open
+  },
   data() {
     return {
       title: '个人信息保护管理制度',
@@ -116,11 +126,6 @@ export default {
   },
   computed: {},
   methods: {
-    getRsaCode(str, PublicKey) {
-      const encryptStr = new JSEncrypt();
-      encryptStr.setPublicKey(PublicKey); // 设置 加密公钥
-      this.privateKey = encryptStr.encrypt(str.toString()); // 进行加密
-    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = '';
@@ -137,7 +142,7 @@ export default {
           this.loading = true;
           this.loginForm.password = MD5(this.loginForm.password.trim());
           login(this.loginForm)
-            .then(({data}) => {
+            .then(({ data }) => {
               userStore.setUser(data);
               this.goToPage();
             })
@@ -258,11 +263,12 @@ $light_gray: #eee;
   }
 
   .svg-container {
-    padding: 6px 5px 6px 15px;
+    padding-left: 15px;
     color: $dark_gray;
     vertical-align: middle;
     width: 30px;
-    display: inline-block;
+    display: flex;
+    align-items: center;
   }
 
   .title-container {
@@ -280,7 +286,7 @@ $light_gray: #eee;
   .show-pwd {
     position: absolute;
     right: 10px;
-    top: 7px;
+    top: 12px;
     font-size: 16px;
     color: $dark_gray;
     cursor: pointer;

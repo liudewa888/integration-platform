@@ -16,34 +16,39 @@
         :collapse-transition="true"
         :collapse="isCollapse"
         @select="handleSelect"
-        @open="handleOpen"
-        @close="handleClose"
       >
         <recursive-menu :menu-data="store.leftMenus[store.topMenuActiveIndex]"></recursive-menu>
       </el-menu>
-    </div>
-    <div class="collapse-button">
-      <img :src="closeImg" @click="menuCollapse" v-if="!isCollapse" />
-      <img :src="openImg" @click="menuCollapse" v-else />
+      <div class="collapse-button">
+        <img :src="closeImg" @click="menuCollapse" v-if="!isCollapse" />
+        <img :src="openImg" @click="menuCollapse" v-else />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import openImg from '@/assets/images/menu_open.png';
 import closeImg from '@/assets/images/menu_close.png';
 import RecursiveMenu from './RecursiveMenu.vue';
 import { useMenusStore } from '@/stores/menus';
 
+const router = useRouter();
 const store = useMenusStore();
 const activeRoute = ref('/');
 const isCollapse = ref(false);
 
-const handleSelect = () => {};
-const handleOpen = () => {};
-const handleClose = () => {};
-const menuCollapse = () => {};
+const handleSelect = (path) => {
+  store.setLeftMenusActiveRoute(path);
+  router.push(path);
+};
+const menuCollapse = () => {
+  isCollapse.value = !isCollapse.value;
+};
+
+activeRoute.value = store.leftMenusActiveRoute;
 </script>
 
 <style lang="scss" scoped>
@@ -51,12 +56,10 @@ div.content::-webkit-scrollbar {
   width: 0;
 }
 .content {
-  width: 220px;
   height: 100%;
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-
   .el-menu {
     .is-active > .el-submenu__title {
       background-color: #4890ff !important ;
@@ -73,7 +76,6 @@ div.content::-webkit-scrollbar {
     }
     > .el-submenu {
       width: 220px;
-
       box-sizing: border-box;
 
       > .el-submenu__title {
@@ -142,7 +144,7 @@ div.content::-webkit-scrollbar {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 220px;
+  width: 100%;
   min-width: 56px;
   height: 50px;
   background-color: #244880;
@@ -168,10 +170,10 @@ div.content::-webkit-scrollbar {
 }
 .el-menu--collapse {
   width: 56px;
+  height: 100%;
 }
 
 .el-menu--vertical {
-  //   left: 56px !important;
   .el-menu-item {
     height: 50px;
     &:hover {
