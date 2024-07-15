@@ -77,8 +77,9 @@
               maxlength="4"
               class="form-control"
               placeholder="请输入验证码"
+              style="width: 60%;"
             />
-            <img src="/verify" id="yzm" />
+            <img src="" id="yzm" />
           </div>
           <div class="row">
             <div class="col-xs-8">
@@ -112,13 +113,19 @@
     <!-- Bootstrap 3.3.7 -->
     <script src="/javascripts/bootstrap.min.js"></script>
     <script src="/javascripts/md5.js"></script>
+    <script src="/javascripts/code.js"></script>
     <script>
+      function generate_code() {
+        const result = create_code();
+        document.cookie = 'verify_code=' +hex_md5(result.code)
+        const imgDataURL = result.dataURL;
+        return imgDataURL
+      }
       $(function () {
         $("#yzm").click(function () {
-          var url = "/verify?t=" + Math.random();
-          this.src = url;
+          this.src = generate_code()
         });
-
+        $("#yzm").click()
         $("#username").focus();
         function login() {
           var username = $("#username").val();
@@ -141,19 +148,15 @@
               text: "密码不能为空",
               timeout: "2000",
             }).show();
-          }
-          // todo 注释验证码
-          // else if (verify == "" || verify.trim() == "") {
-          //     $(".login-box-msg").text('验证码不能为空');
-          //     new Noty({
-          //         type: 'error',
-          //         layout: 'topCenter',
-          //         text: '验证码不能为空',
-          //         timeout: '2000'
-          //     }).show();
-          // }
-          else {
-            console.log($("#loginForm").serialize());
+          } else if (verify == "" || verify.trim() == "") {
+              $(".login-box-msg").text('验证码不能为空');
+              new Noty({
+                  type: 'error',
+                  layout: 'topCenter',
+                  text: '验证码不能为空',
+                  timeout: '2000'
+              }).show();
+          }else {
             $.ajax({
               type: "POST",
               url: "/login",
@@ -178,6 +181,9 @@
               },
               success: function (result) {
                 if (result.error) {
+                  if(result.msg.includes('验证码错误')){
+                    $("#yzm").click()
+                  }
                   $(".login-box-msg").text(result.msg || "登录失败   ");
                   new Noty({
                     type: "error",

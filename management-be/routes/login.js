@@ -23,21 +23,20 @@ router.get("/exit", (req, res, next) => {
 });
 /* POST */
 router.post("/", async (req, res, next) => {
-  console.log(req.body);
-  var verify_code = req.session.verify_code;
+  var verify_code = req.cookies["verify_code"];
   var username = req.body.username;
   var password = req.body.password;
   var verify = req.body.verify;
   var is_remember = req.body.is_remember;
+  verify = stringUtils.md5(verify.toLowerCase());
   // todo 注释验证码
-  if (verify_code !== verify || true) {
+  if (verify_code == verify) {
     var sql = "select * from bs_user where user_name=? and is_del=0";
     var users = await mysql.query(sql, [username]);
     if (users.length > 0) {
       var user = users[0];
       var salt = user.salt;
       var password2 = stringUtils.createPassword(password.trim() + salt);
-      console.log(password, password2, user.password, "password");
       if (user.password != password2) {
         res.status(200).json({ error: 1, msg: "用户名或者密码错误" });
         return;
@@ -57,7 +56,7 @@ router.post("/", async (req, res, next) => {
       res.status(200).json({ error: 1, msg: "用户名或者密码错误" });
     }
   } else {
-    res.status(200).json({ error: 1, msg: "验证码错误" });
+    res.status(200).json({ error: 1, msg: "验证码错误"});
   }
 });
 module.exports = router;
