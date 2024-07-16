@@ -4,6 +4,7 @@ import { getRoute } from '@/api/user';
 import { useUserStore } from '@/stores/user';
 import { useMenusStore } from '@/stores/menus';
 import { useAppStore } from '@/stores/app';
+import { useBreadcrumbStore } from '@/stores/breadcrumb';
 
 const systemCode = window.appConfig.systemCode;
 const MenuTopID = window.appConfig.MenuTopID;
@@ -56,6 +57,8 @@ const filterAsyncRoutes = (data, rootID) => {
         node.name = item.FuncCode || '';
         node.funcType = item.FuncType;
         node.parentID = item.ParentID;
+        node.title = item.FuncName;
+        node.id = item.FuncCode;
         node.meta = {
           seqNo: item.SeqNo,
           title: item.FuncName || '',
@@ -126,10 +129,33 @@ function findPath(list, targetPath) {
   }
   return false;
 }
+function findRouterByPath(data, path) {
+  const result = [];
 
+  // 递归函数，用于查找元素
+  function search(element, parentPath) {
+    if (element.path === path) {
+      const titles = parentPath.map((parent) => {
+        return { title: parent.title, path: parent.path };
+      });
+      titles.push({ title: element.title, path: element.path });
+      result.push(...titles);
+    }
+
+    if (element.children) {
+      element.children.forEach((child) => search(child, [...parentPath, element]));
+    }
+  }
+
+  // 开始搜索
+  data.forEach((element) => search(element, []));
+
+  return result;
+}
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
   const menusStore = useMenusStore();
+  const breadcrumbStore = useBreadcrumbStore();
   if (to.path === '/login') {
     next();
     return;
@@ -140,11 +166,13 @@ router.beforeEach(async (to, from, next) => {
     if (menusStore.menus && menusStore.menus.length) {
       const activeProjectIndex = menusStore.topMenuActiveIndex;
       const menus = menusStore.menus;
+      const leftMenus = menusStore.leftMenus;
       const currentMenus = menus[activeProjectIndex];
+      const currentLeftMenus = leftMenus[activeProjectIndex];
       const hasPath = findPath([currentMenus], to.path);
-      console.log(hasPath, 'hasPath');
-
       if (hasPath) {
+        const breadcrumbData = findRouterByPath(currentLeftMenus, to.path);
+        breadcrumbStore.setBreadcrumbData(breadcrumbData);
         menusStore.setLeftMenusActiveRoute(to.path);
         next();
       } else {

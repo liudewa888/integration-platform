@@ -3,8 +3,9 @@
     <Header></Header>
     <div class="flex-1 flex">
       <Sidebar></Sidebar>
-      <div class="flex-1 p-3 h-full">
-        <RouterView />
+      <div class="flex-1 h-full flex flex-col">
+        <Breadcrumb />
+        <RouterView class="p-3 flex-1 bg-[#f3f7f9]" />
       </div>
     </div>
   </div>
@@ -12,4 +13,5 @@
 <script setup lang="ts">
 import Header from './components/Header.vue';
 import Sidebar from './components/Sidebar.vue';
+import Breadcrumb from './components/Breadcrumb.vue';
 </script>
