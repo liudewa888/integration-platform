@@ -12,14 +12,13 @@
       </div>
       <div class="loginForm">
         <el-radio-group v-model="loginForm.loginType" style="width: 100%">
-          <el-radio-button label="0">用户名登陆</el-radio-button>
-          <el-radio-button label="1">工号登陆</el-radio-button>
-          <el-radio-button label="2">手机号登陆</el-radio-button>
+          <el-radio-button value="0">用户名登陆</el-radio-button>
+          <el-radio-button value="1">工号登陆</el-radio-button>
+          <el-radio-button value="2">手机号登陆</el-radio-button>
         </el-radio-group>
       </div>
       <el-form-item prop="username">
         <span class="svg-container">
-          <svg-icon icon-class="user" />
           <el-icon :size="20"><User /></el-icon>
         </span>
         <el-input

@@ -42,7 +42,7 @@ export default defineConfig({
       },
       '/dist2': {
         // 选项写法
-        target: 'http://localhost:8082',
+        target: 'http://localhost:9083',
         changeOrigin: true,
         rewrite: (path) => {
           path = path.replace(/^\/dist2/, '');

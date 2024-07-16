@@ -2,7 +2,7 @@ import request from './request';
 
 export function login(data) {
   return request({
-    url: '/api/admin/login',
+    url: '/admin/login',
     method: 'post',
     data: {
       loginType: data.loginType,
@@ -16,14 +16,14 @@ export function login(data) {
 
 export function GetPublicKey(data) {
   return request({
-    url: '/api/Login/publicKey',
+    url: '/Login/publicKey',
     method: 'get'
   });
 }
 
 export function ssoLogin(data) {
   return request({
-    url: '/api/admin/SSOLogin',
+    url: '/admin/SSOLogin',
     method: 'post',
     data: {
       funcCode: window.appConfig.funcCode,
@@ -34,7 +34,7 @@ export function ssoLogin(data) {
 }
 export function getInfo(data) {
   return request({
-    url: '/api/Menu/GetUserInfo',
+    url: '/Menu/GetUserInfo',
     method: 'post',
     data
   });
@@ -48,18 +48,18 @@ export function logout() {
 
 // export function apiUpdatePwd(data) {
 //   return request({
-//     url: '/api/Menu/UpdatePwd',
+//     url: '/Menu/UpdatePwd',
 //     method: 'post',
 //     data: { UserID: store.getters.UserID, ...data }
 //   })
 // }
 
 export function getRoute(params) {
-  return request.get('/api/getMenus', { params });
+  return request.get('/getMenus', { params });
 }
 export function GetUserFun(data) {
   return request({
-    url: '/api/Menu/GetUserFun',
+    url: '/Menu/GetUserFun',
     method: 'post',
     data
   });
@@ -67,7 +67,7 @@ export function GetUserFun(data) {
 
 export function systemTitle(params) {
   return request({
-    url: '/api/parameter/HisName',
+    url: '/parameter/HisName',
     method: 'get',
     params
   });
@@ -76,7 +76,7 @@ export function systemTitle(params) {
 // 版本记录
 export function version(params) {
   return request({
-    url: '/api/version/' + window.appConfig.systemCode,
+    url: '/version/' + window.appConfig.systemCode,
     method: 'get',
     params
   });

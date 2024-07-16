@@ -3,12 +3,12 @@
     <el-breadcrumb :separator="separator">
       <el-breadcrumb-item
         :to="{ path: item.path }"
-        v-for="(item, index) in breadcrumbDataArr.slice(0, -1)"
+        v-for="(item, index) in breadcrumArr.slice(0, -1)"
         :key="index"
       >
         {{ item.title }}</el-breadcrumb-item
       >
-      <el-breadcrumb-item>{{ breadcrumbDataArr.at(-1).title }}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{ breadcrumArr.at(-1).title }}</el-breadcrumb-item>
     </el-breadcrumb>
   </div>
 </template>

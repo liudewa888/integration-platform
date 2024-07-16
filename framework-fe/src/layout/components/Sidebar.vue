@@ -128,7 +128,6 @@ div.content::-webkit-scrollbar {
         }
       }
       .el-menu-item {
-        min-width: 179px !important;
         font-weight: bold !important;
       }
     }

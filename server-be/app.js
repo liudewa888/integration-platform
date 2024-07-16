@@ -107,7 +107,7 @@ app.post("/admin/login", async (req, res) => {
 function authenticateToken(req, res, next) {
   const token = req.headers["token"];
   if (!token) {
-    return res.send(responseFormat(409, null, "需要登录,才能操作"));
+    return res.send(responseFormat(401, null, "需要登录,才能操作"));
   }
   pool.getConnection((err, connection) => {
     const sql = `select token_key from bs_user WHERE token = '${token}'`;

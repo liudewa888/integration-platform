@@ -147,6 +147,10 @@ const topMenusActivIndex = computed(() => {
   flex: 1;
   display: flex;
   justify-content: center;
+
+  :deep(.el-menu--horizontal.el-menu ){
+    border-bottom: none;
+  }
 }
 
 .navbar-right {
