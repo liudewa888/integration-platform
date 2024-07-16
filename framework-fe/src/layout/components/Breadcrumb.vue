@@ -1,14 +1,14 @@
 <template>
   <div class="breadcrumbmain" v-if="breadcrumArr.length">
     <el-breadcrumb :separator="separator">
-      <el-breadcrumb-item v-for="(item, index) in breadcrumArr" :key="`${index}_breadcrumb`">
-        <router-link class="link" :to="item.path" v-if="index !== breadcrumArr.length - 1">
-          {{ item.title }}
-        </router-link>
-        <span class="current" v-else>
-          {{ item.title }}
-        </span>
-      </el-breadcrumb-item>
+      <el-breadcrumb-item
+        :to="{ path: item.path }"
+        v-for="(item, index) in breadcrumbDataArr.slice(0, -1)"
+        :key="index"
+      >
+        {{ item.title }}</el-breadcrumb-item
+      >
+      <el-breadcrumb-item>{{ breadcrumbDataArr.at(-1).title }}</el-breadcrumb-item>
     </el-breadcrumb>
   </div>
 </template>
