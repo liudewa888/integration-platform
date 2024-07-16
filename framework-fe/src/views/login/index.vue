@@ -19,7 +19,7 @@
       </div>
       <el-form-item prop="username">
         <span class="svg-container">
-          <!-- <svg-icon icon-class="user" /> -->
+          <svg-icon icon-class="user" />
           <el-icon :size="20"><User /></el-icon>
         </span>
         <el-input
@@ -35,7 +35,6 @@
 
       <el-form-item prop="password">
         <span class="svg-container">
-          <!-- <svg-icon icon-class="password" /> -->
           <el-icon :size="18"><Lock /></el-icon>
         </span>
         <el-input
@@ -50,7 +49,6 @@
           @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showPwd">
-          <!-- <svg-icon :icon-class="passwordType === 'password' ? 'TurnOff' : 'eye-open'" /> -->
           <el-icon :size="18" v-if="passwordType === 'password'"><TurnOff /></el-icon>
           <el-icon :size="18" v-else><Open /></el-icon>
         </span>

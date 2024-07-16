@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import openImg from '@/assets/images/menu_open.png';
 import closeImg from '@/assets/images/menu_close.png';
@@ -37,18 +37,18 @@ import { useMenusStore } from '@/stores/menus';
 
 const router = useRouter();
 const store = useMenusStore();
-const activeRoute = ref('/');
 const isCollapse = ref(false);
 
 const handleSelect = (path) => {
-  store.setLeftMenusActiveRoute(path);
   router.push(path);
 };
 const menuCollapse = () => {
   isCollapse.value = !isCollapse.value;
 };
 
-activeRoute.value = store.leftMenusActiveRoute;
+const activeRoute = computed(() => {
+  return store.leftMenusActiveRoute;
+});
 </script>
 
 <style lang="scss" scoped>

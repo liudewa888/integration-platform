@@ -9,6 +9,7 @@ import { vueErrorHandler } from '@/utils/errorHandler';
 import 'element-plus/dist/index.css';
 import './assets/css/main.css';
 import './assets/css/tailwind.css';
+import './assets/iconfont/icons1/iconfont.css'
 
 const app = createApp(App);
 app.use(createPinia());

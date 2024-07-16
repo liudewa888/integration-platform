@@ -94,7 +94,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import logo from '@/assets/images/logo.png';
 import { useMenusStore } from '@/stores/menus';
@@ -106,8 +106,6 @@ const userStore = useUserStore();
 const appStore = useAppStore();
 const showTopMenu = ref(window.appConfig.showTopMenu);
 const logo1 = ref();
-const topMenusActivIndex = ref(0);
-
 const name = ref(userStore.user.name);
 const handleSelect = (index) => {
   menusStore.setTopMenuActiveIndex(index);
@@ -129,7 +127,9 @@ const logout = async () => {
   router.push(`/login`);
 };
 
-topMenusActivIndex.value = menusStore.topMenuActiveIndex;
+const topMenusActivIndex = computed(() => {
+  return menusStore.topMenuActiveIndex;
+});
 </script>
 <style lang="scss" scoped>
 .el-menu-item.is-active {

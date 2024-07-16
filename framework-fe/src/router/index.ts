@@ -5,6 +5,9 @@ import { useUserStore } from '@/stores/user';
 import { useMenusStore } from '@/stores/menus';
 import { useAppStore } from '@/stores/app';
 
+const systemCode = window.appConfig.systemCode;
+const MenuTopID = window.appConfig.MenuTopID;
+const redirectRoute = window.appConfig.defaultRouter;
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -14,7 +17,7 @@ const router = createRouter({
     },
     {
       path: '/',
-      redirect: '/home',
+      redirect: redirectRoute,
       component: Layout,
       children: [
         {
@@ -26,8 +29,6 @@ const router = createRouter({
   ]
 });
 
-const systemCode = window.appConfig.systemCode;
-const MenuTopID = window.appConfig.MenuTopID;
 const transformProperty = (item) => {
   item.ParentID = item.parent_id;
   item.FuncCode = item.menu_id;
@@ -137,11 +138,9 @@ router.beforeEach(async (to, from, next) => {
     next('/login');
   } else {
     if (menusStore.menus && menusStore.menus.length) {
-      console.log(menusStore.leftMenus, 'leftMenus');
       const activeProjectIndex = menusStore.topMenuActiveIndex;
       const menus = menusStore.menus;
       const currentMenus = menus[activeProjectIndex];
-      console.log(currentMenus, to.path, 'to.path');
       const hasPath = findPath([currentMenus], to.path);
       console.log(hasPath, 'hasPath');
 
@@ -157,7 +156,7 @@ router.beforeEach(async (to, from, next) => {
       menusStore.setMenus(res.menus);
       menusStore.setTopMenus(res.topMenus);
       menusStore.setLeftMenus(res.leftMenus);
-      next();
+      next({ ...to, replace: true });
     }
   }
 });

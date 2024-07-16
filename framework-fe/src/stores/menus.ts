@@ -28,10 +28,10 @@ export const useMenusStore = defineStore('menus', () => {
     menus,
     topMenus,
     leftMenus,
+    topMenuActiveIndex,
     setMenus,
     setTopMenus,
     setLeftMenus,
-    topMenuActiveIndex,
     setTopMenuActiveIndex,
     setLeftMenusActiveRoute
   };
