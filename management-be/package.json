@@ -3,7 +3,7 @@
   "version": "0.2.2",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./bin/www.js"
+    "dev": "nodemon app.js"
   },
   "dependencies": {
     "body-parser": "~1.15.1",
