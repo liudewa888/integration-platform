@@ -1,5 +1,4 @@
-import { fileURLToPath, URL } from 'node:url';
-
+import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
@@ -9,9 +8,12 @@ import autoprefixer from 'autoprefixer';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  optimizeDeps: {
+    exclude: ['vite:import-analysis']
+  },
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': resolve(__dirname, 'src')
     },
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx', '.vue']
   },
@@ -31,7 +33,7 @@ export default defineConfig({
       },
       '/dist1': {
         // 选项写法
-        target: 'http://localhost:8081',
+        target: 'http://localhost:9083',
         changeOrigin: true,
         rewrite: (path) => {
           path = path.replace(/^\/dist1/, '');
@@ -42,7 +44,7 @@ export default defineConfig({
       },
       '/dist2': {
         // 选项写法
-        target: 'http://localhost:9083',
+        target: 'http://localhost:8082',
         changeOrigin: true,
         rewrite: (path) => {
           path = path.replace(/^\/dist2/, '');

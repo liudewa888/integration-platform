@@ -4,6 +4,7 @@ import App from './App.vue'
 
 import './assets/css/base.css'
 import './assets/css/normalize.css'
+import './assets/css/main.css'
 
 import { vueErrorHandler } from "./utils/errorHandler";
 

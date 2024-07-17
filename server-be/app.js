@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 const pool = mysql.createPool(appConfig.dataBase);
 // pool.on("connection", function (connection) {
-//   console.log("数据库连接成功！");
+//   console.log("连接数量：", pool._allConnections.length);
 // });
 // 连接池错误事件监听
 pool.on("error", function (err) {
@@ -80,6 +80,7 @@ app.post("/admin/login", async (req, res) => {
           const token = generateAccessToken({ uname: data.uname }, key);
           sql = `UPDATE bs_user SET token_key = '${key}', token='${token}' WHERE user_name = '${data.uname}'`;
           connection.query(sql, (err, result) => {
+            connection.release();
             if (!err) {
               const userInfo = {
                 token,
@@ -92,7 +93,6 @@ app.post("/admin/login", async (req, res) => {
             } else {
               res.send(responseFormat(409, [], err.sqlMessage));
             }
-            connection.release();
           });
         } else {
           res.send(responseFormat(409, [], "用户名不存在"));
@@ -112,6 +112,7 @@ function authenticateToken(req, res, next) {
   pool.getConnection((err, connection) => {
     const sql = `select token_key from bs_user WHERE token = '${token}'`;
     connection.query(sql, (err, result) => {
+      connection.release();
       if (!err && result.length) {
         const key = result[0].token_key;
         jwt.verify(token, key, (err, decoded) => {
@@ -139,14 +140,11 @@ app.get("/getMenus", authenticateToken, async (req, res) => {
     res.send(responseFormat(409, [], "缺少参数"));
     return;
   }
-  console.log("debugger", "pool.getConnection start");
   pool.getConnection((err, connection) => {
     if (err) {
-      console.log("debugger", err);
       res.send(responseFormat(409, [], err.sqlMessage));
       return;
     }
-    console.log("debugger", "pool.getConnection");
     let sql = `select b.* from bs_menu_role a left join bs_menu b on a.menu_id = b.menu_id  left join bs_user_role c on a.role_id = c.role_id 
     where c.user_id = ${query.userId} and b.system_code = ${query.systemCode}`;
     if (query.menuType) {
@@ -154,6 +152,7 @@ app.get("/getMenus", authenticateToken, async (req, res) => {
       where c.user_id = ${query.userId} and b.system_code = ${query.systemCode} and b.menu_type = ${query.menuType}`;
     }
     connection.query(sql, (err, result) => {
+      connection.release();
       if (!err) {
         if (result) {
           res.send(responseFormat(200, result));
@@ -161,7 +160,6 @@ app.get("/getMenus", authenticateToken, async (req, res) => {
       } else {
         res.send(responseFormat(409, [], err.sqlMessage));
       }
-      connection.release();
     });
   });
 });
