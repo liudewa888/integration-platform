@@ -156,7 +156,8 @@ router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
   const menusStore = useMenusStore();
   const breadcrumbStore = useBreadcrumbStore();
-  if (to.path === '/login') {
+  const whiteList = ['/login','/ssoLogin']
+  if (whiteList.includes(to.path)) {
     next();
     return;
   }

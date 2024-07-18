@@ -1,6 +1,6 @@
 window.appConfig = {
   baseURL: 'http://10.1.12.100:33355/', // 开发
-  iframe_url: ['dist1', 'http://localhost:9083', '/dist3', '/dist4'], // 生产环境
+  iframe_url: ['/dist1', '/dist2', '/dist3', '/dist4'], // 生产环境
   defaultRouter: '/home', // 系统第一个项目的首页路由
   funcCode: 'big_data',
   systemCode: '302', // 所属的系统ID(system_code)

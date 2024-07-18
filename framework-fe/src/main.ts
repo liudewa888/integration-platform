@@ -32,8 +32,8 @@ const props = {
 };
 const lifecycles = {
   beforeLoad: (appWindow) => {
-    console.log(appWindow.__WUJIE,'appWindow.__WUJIE');
-    
+    console.log(appWindow.__WUJIE, 'appWindow.__WUJIE');
+
     console.log(`${appWindow.__WUJIE.id} beforeLoad 生命周期`);
   },
   beforeMount: (appWindow) => console.log(`${appWindow.__WUJIE.id} beforeMount 生命周期`),
@@ -46,10 +46,11 @@ const lifecycles = {
 };
 
 setupApp({
-  name: 'http://localhost:9083',
+  name: '/dist2',
   url: 'http://localhost:9083',
   exec: true,
   props,
+  alive: true,
   ...lifecycles
 });
 
