@@ -1,9 +1,10 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
+import ElementPlus from "unplugin-element-plus/vite";
 import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   base: "./",
-  plugins: [vue()],
+  plugins: [vue(),ElementPlus()],
   resolve: {
     alias: {
       "@": resolve(__dirname, "src"),

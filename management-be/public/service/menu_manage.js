@@ -178,7 +178,7 @@ function getSelections() {
 }
 
 function add(data) {
-  var modal = $("#e-dialog-menu");
+  const modal = $("#e-dialog-menu");
   $("#e-dialog-menu").modal({
     keyboard: true,
   });
@@ -188,7 +188,7 @@ function del(id) {
   removeData(id);
 }
 function update(data) {
-  var modal = $("#e-dialog-menu");
+  const modal = $("#e-dialog-menu");
   $("#e-dialog-menu").modal({
     keyboard: true,
   });
@@ -237,10 +237,10 @@ const initSystemSelect = function () {
 };
 
 var initForm = function (modal, data) {
-  console.log(data, "data");
   let url = `/menus/tree?tree=1&system_code=${data.system_code}&menu_type=${data.menu_type}`;
   if (data.type === "add") {
     url = `/menus/tree?tree=2&menu_id=${data.menu_id}`;
+    data.menu_id = 0
   }
   $.ajax({
     type: "get",
@@ -264,16 +264,12 @@ var initForm = function (modal, data) {
         }).show();
       } else {
         var res = result.data;
-        var auxArr = [];
+        const auxArr = [];
         auxArr[0] = "<option value='0'>==请选择父级菜单==</option>";
 
-        // 创建select
-        $("div.parent_id").html(
-          '<select class="form-control" id="e_parent_id" name="e_parent_id"></select>'
-        );
         // 添加选项
-        for (var i = 0; i < res.length; i++) {
-          var menu_id = res[i]["menu_id"];
+        for (let i = 0; i < res.length; i++) {
+          const menu_id = res[i]["menu_id"];
           auxArr[i + 1] =
             "<option value='" +
             menu_id +
@@ -281,7 +277,8 @@ var initForm = function (modal, data) {
             res[i]["menu_name"] +
             "</option>";
         }
-        $("#e_parent_id").html(auxArr.join(""));
+        $("#e_parent_id").empty();
+        $("#e_parent_id").append($(auxArr.join("")));
         if (data) {
           modal.find(".modal-body input#e_id").val(data.menu_id || 0);
           modal
@@ -309,6 +306,10 @@ var initForm = function (modal, data) {
 $("#e-dialog-menu")
   .find(".modal-footer #saveMenu")
   .click(function () {
+    console.log(
+      $("#e-menu-form").serialize(),
+      ' $("#e-menu-form").serialize()'
+    );
     $.ajax({
       type: "get",
       url: "/menus/save",
@@ -327,7 +328,7 @@ $("#e-dialog-menu")
           new Noty({
             type: "error",
             layout: "topCenter",
-            text: result.msg || "保存角色失败",
+            text: result.msg || "保存菜单失败",
             timeout: "2000",
           }).show();
         } else {
@@ -346,10 +347,18 @@ $("#e-dialog-menu")
   });
 $("#menu_refresh").on("click", function () {
   $table.bootstrapTable("refresh");
+  initSystemSelect();
 });
 
 $("#menu_add").on("click", function () {
-  add({});
+  $("#e-menu-form")[0].reset();
+  $("#e_id").val("0");
+  $("#e_parent_id").empty();
+  $("#e_parent_id").val("0");
+  $("#exampleModalLabel").text("新增系统");
+  $("#e-dialog-menu").modal({
+    keyboard: true,
+  });
 });
 $("#menu_edit").on("click", function () {
   var ids = getSelections();
@@ -444,7 +453,7 @@ $("#menu_batch_remove").on("click", function () {
 
 $("#e_system_code").on("change", function () {
   const system_code = $(this).val();
-  let url = '/menus/tree'
+  let url = "/menus/tree";
   if (Number(system_code)) {
     url = `/menus/tree?system_code=${system_code}`;
   }

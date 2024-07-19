@@ -46,7 +46,7 @@ const lifecycles = {
 };
 
 setupApp({
-  name: '/dist2',
+  name: '/dist1',
   url: 'http://localhost:9083',
   exec: true,
   props,

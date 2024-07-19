@@ -17,6 +17,10 @@ const router = createRouter({
       component: () => import('@/views/login/index')
     },
     {
+      path: '/noMenuAccess',
+      component: () => import('@/views/NoMenuAccess')
+    },
+    {
       path: '/',
       redirect: redirectRoute,
       component: Layout,
@@ -124,7 +128,8 @@ function findPath(list, targetPath) {
       return true;
     }
     if (obj.children && obj.children.length) {
-      return findPath(obj.children, targetPath);
+      const result = findPath(obj.children, targetPath);
+      if (result) return true;
     }
   }
   return false;
@@ -152,11 +157,12 @@ function findRouterByPath(data, path) {
 
   return result;
 }
+let jumpNum = 0;
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
   const menusStore = useMenusStore();
   const breadcrumbStore = useBreadcrumbStore();
-  const whiteList = ['/login','/ssoLogin']
+  const whiteList = ['/login', '/ssoLogin', '/noMenuAccess'];
   if (whiteList.includes(to.path)) {
     next();
     return;
@@ -172,16 +178,26 @@ router.beforeEach(async (to, from, next) => {
       const currentLeftMenus = leftMenus[activeProjectIndex];
       const hasPath = findPath([currentMenus], to.path);
       if (hasPath) {
+        jumpNum = 0;
         const breadcrumbData = findRouterByPath(currentLeftMenus, to.path);
         breadcrumbStore.setBreadcrumbData(breadcrumbData);
         menusStore.setLeftMenusActiveRoute(to.path);
         next();
       } else {
+        jumpNum++;
+        if (jumpNum > 3) {
+          next(false);
+          Promise.reject({ msg: '禁止路由跳转,请检查配置文件首个系统首页路由是否正确' });
+        }
         menusStore.setTopMenuActiveIndex(0);
         next('/');
       }
     } else {
       const res = await generateRoutes();
+      if (!res.menus || !res.menus.length) {
+        next('/noMenuAccess');
+        return;
+      }
       menusStore.setMenus(res.menus);
       menusStore.setTopMenus(res.topMenus);
       menusStore.setLeftMenus(res.leftMenus);

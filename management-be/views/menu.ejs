@@ -1,133 +1,204 @@
 <% include partials/iframe_header %>
-<link rel="stylesheet" href="/css/bootstrap-table.min.css">
-<link rel="stylesheet" href="/css/jquery.treegrid.min.css">
+<link rel="stylesheet" href="/css/bootstrap-table.min.css" />
+<link rel="stylesheet" href="/css/jquery.treegrid.min.css" />
 
 <!-- Main content -->
 <section class="content">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="box" style="margin-bottom:auto">
-                <div class="box-header with-border">
-                    <b>工具栏： </b>
-                    <caption>
-                        <button type="button" class="btn btn-default" id="menu_refresh"><i
-                                    class="fa fa-refresh icon-white"></i> 刷新
-                        </button>
-                        <button type="button" class="btn btn-success" id="menu_add" data-toggle="modal"
-                                data-whatever=""><i class="glyphicon glyphicon-edit icon-white"></i> 新增
-                        </button>
-                        <button type="button" class="btn btn-info" id="menu_edit" data-toggle="modal" id="user-edit"><i
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box" style="margin-bottom: auto">
+        <div class="box-header with-border">
+          <b>工具栏： </b>
+          <caption>
+            <button type="button" class="btn btn-default" id="menu_refresh">
+              <i class="fa fa-refresh icon-white"></i> 刷新
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              id="menu_add"
+              data-toggle="modal"
+              data-whatever=""
+            >
+              <i class="glyphicon glyphicon-edit icon-white"></i> 新增系统
+            </button>
+            <!-- <button type="button" class="btn btn-info" id="menu_edit" data-toggle="modal" id="user-edit"><i
                                     class="fa fa-edit icon-white"></i> 编辑
-                        </button>
-                        <button type="button" class="btn btn-danger" id="menu_batch_remove"><i
-                                    class="fa fa-remove icon-white"></i> 删除
-                        </button>
-                        <button type="button" class="btn btn-info" id="menu_find" onclick="optionUserData(this);"><i
+                        </button> -->
+            <button type="button" class="btn btn-danger" id="menu_batch_remove">
+              <i class="fa fa-remove icon-white"></i> 多项删除
+            </button>
+            <!-- <button type="button" class="btn btn-info" id="menu_find" onclick="optionUserData(this);"><i
                                     class="glyphicon glyphicon-zoom-in icon-white"></i> 详情
-                        </button>
-                    </caption>
-                    <caption class="col-md-3 col-sm-4">
-                      <span style="margin-left: 20px;">系统筛选：</span>
-                      <select class="system-code form-control" id="e_system_code" name="e_system_code" style="width: 200px;display: inline;">
-                      </select>
-                    </caption>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <table id="menus"></table>
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
+                        </button> -->
+          </caption>
+          <caption class="col-md-3 col-sm-4">
+            <span style="margin-left: 20px">系统筛选：</span>
+            <select
+              class="system-code form-control"
+              id="e_system_code"
+              name="e_system_code"
+              style="width: 200px; display: inline"
+            ></select>
+          </caption>
         </div>
-        <!-- /.col -->
+        <!-- /.box-header -->
+        <div class="box-body">
+          <table id="menus"></table>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
     </div>
-    <!-- /.row -->
+    <!-- /.col -->
+  </div>
+  <!-- /.row -->
 </section>
 <!-- /.content -->
 
-<div class="modal fade" id="e-dialog-menu" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="exampleModalLabel">菜单操作</h4>
+<div
+  class="modal fade"
+  id="e-dialog-menu"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="exampleModalLabel">菜单操作</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" id="e-menu-form">
+          <div class="box-body">
+            <input type="hidden" data-name="e_id" name="e_id" id="e_id" />
+            <div class="form-group">
+              <label for="system_code" class="col-sm-2 control-label"
+                >系统ID</label
+              >
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="e_system_code"
+                  id="e_system_code"
+                  placeholder="请输入系统ID"
+                />
+              </div>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal" id="e-menu-form">
-                    <div class="box-body">
-                        <input type="hidden" data-name="e_id" name="e_id" id="e_id"/>
-                        <div class="form-group">
-                            <label for="system_code" class="col-sm-2 control-label">系统ID</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="e_system_code" id="e_system_code"
-                                       placeholder="请输入系统ID">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="username" class="col-sm-2 control-label">名称</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="e_menu_name" id="e_menu_name"
-                                       placeholder="请输入菜单名称">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="username" class="col-sm-2 control-label">父级菜单</label>
-                            <div class="col-sm-10">
-                                <div class="parent_id"></div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="type" class="col-sm-2 control-label">类型</label>
-                            <div class="col-sm-10">
-                                <select name="e_type" id="e_type">
-                                    <option value="0">系统</option>
-                                    <option value="1">项目</option>
-                                    <option value="2">菜单</option>
-                                    <option value="3">页面</option>
-                                    <option value="4">按钮</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="menu_order" class="col-sm-2 control-label">排序</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="e_menu_order" name="e_menu_order"
-                                       placeholder="请输入序号">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                          <label for="username" class="col-sm-2 control-label">路由</label>
-                          <div class="col-sm-10">
-                              <input type="text" class="form-control" id="e_menu_url" name="e_menu_url"
-                                     placeholder="请输入菜单路由">
-                          </div>
-                      </div>
-                        <div class="form-group">
-                            <label for="menu_flag" class="col-sm-2 control-label">唯一值</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="e_menu_flag" name="e_menu_flag"
-                                       placeholder="请输入菜单唯一标识">
-                                <label>注：必须唯一，操作按钮可以重复</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="username" class="col-sm-2 control-label">图标</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="e_menu_icon" name="e_menu_icon"
-                                       placeholder="请输入菜单图标">
-                            </div>
-                        </div>
-                    </div>
-                </form>
+            <div class="form-group">
+              <label for="username" class="col-sm-2 control-label">名称</label>
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  name="e_menu_name"
+                  id="e_menu_name"
+                  placeholder="请输入菜单名称"
+                />
+              </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" id="saveMenu">保存</button>
+            <div class="form-group">
+              <label for="username" class="col-sm-2 control-label"
+                >父级菜单</label
+              >
+              <div class="col-sm-10">
+                <div class="parent_id">
+                  <select
+                    class="form-control"
+                    id="e_parent_id"
+                    name="e_parent_id"
+                  >
+                  </select>
+                </div>
+              </div>
             </div>
-        </div>
+            <div class="form-group">
+              <label for="type" class="col-sm-2 control-label">类型</label>
+              <div class="col-sm-10">
+                <select name="e_type" id="e_type">
+                  <option value="0">系统</option>
+                  <option value="1">项目</option>
+                  <option value="2">菜单</option>
+                  <option value="3">页面</option>
+                  <option value="4">按钮</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="menu_order" class="col-sm-2 control-label"
+                >排序</label
+              >
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="e_menu_order"
+                  name="e_menu_order"
+                  placeholder="请输入序号"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="username" class="col-sm-2 control-label">路由</label>
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="e_menu_url"
+                  name="e_menu_url"
+                  placeholder="请输入菜单路由"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="menu_flag" class="col-sm-2 control-label"
+                >唯一值</label
+              >
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="e_menu_flag"
+                  name="e_menu_flag"
+                  placeholder="请输入菜单唯一标识"
+                />
+                <label>注：必须唯一，操作按钮可以重复</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="username" class="col-sm-2 control-label">图标</label>
+              <div class="col-sm-10">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="e_menu_icon"
+                  name="e_menu_icon"
+                  placeholder="请输入菜单图标"
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          关闭
+        </button>
+        <button type="button" class="btn btn-primary" id="saveMenu">
+          保存
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 <% include partials/iframe_footer %>
 <script src="/javascripts/bootstrap-table.min.js"></script>
