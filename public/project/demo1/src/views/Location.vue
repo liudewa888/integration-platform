@@ -16,7 +16,7 @@
       <p>
       <div>如果子应用配置路由同步，浏览器可通过回退回到子应用</div>
       </p>
-      <el-button type="warning" @click="handleClick">跳转后台管理</el-button>
+      <el-button type="primary" @click="handleClick">跳转后台管理</el-button>
     </div>
   </div>
 </template>

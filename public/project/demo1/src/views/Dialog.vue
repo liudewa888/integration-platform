@@ -10,23 +10,13 @@
       <h3>2、打开选择器</h3>
       <p>
         <el-select v-model="value" placeholder="el-select">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </p>
       <h3>3、打开气泡卡片</h3>
       <p>
-        <el-popover
-          placement="top-start"
-          title="Title"
-          :width="200"
-          trigger="hover"
-          content="this is content, this is content, this is content"
-        >
+        <el-popover placement="top-start" title="Title" :width="200" trigger="hover"
+          content="this is content, this is content, this is content">
           <template #reference>
             <el-button>el-popover hover 激活</el-button>
           </template>
@@ -38,9 +28,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="dialogVisible = false"
-            >Confirm</el-button
-          >
+          <el-button type="primary" @click="dialogVisible = false">Confirm</el-button>
         </span>
       </template>
     </el-dialog>
@@ -83,8 +71,5 @@ const options = reactive([
 ]);
 </script>
 
-<style>
-:root {
-  --host-color: #0239d0;
-}
+<style scoped>
 </style>

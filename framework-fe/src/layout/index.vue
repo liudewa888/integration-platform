@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col h-full">
     <Header></Header>
-    <div class="flex-1 flex">
+    <div class="flex-1 flex overflow-auto">
       <Sidebar></Sidebar>
-      <div class="flex-1 h-full flex flex-col">
+      <div class="flex-1 h-full flex flex-col overflow-auto">
         <Breadcrumb />
         <RouterView/>
       </div>
