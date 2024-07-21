@@ -195,8 +195,6 @@ router.beforeEach(async (to, from, next) => {
         next('/noMenuAccess');
         return;
       }
-      console.log(res.leftMenus, 'menus');
-
       menusStore.setMenus(res.menus);
       menusStore.setTopMenus(res.topMenus);
       menusStore.setLeftMenus(res.leftMenus);

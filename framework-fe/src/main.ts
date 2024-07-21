@@ -27,8 +27,6 @@ const props = {
 };
 const lifecycles = {
   beforeLoad: (appWindow) => {
-    console.log(appWindow.__WUJIE, 'appWindow.__WUJIE');
-
     console.log(`${appWindow.__WUJIE.id} beforeLoad 生命周期`);
   },
   beforeMount: (appWindow) => console.log(`${appWindow.__WUJIE.id} beforeMount 生命周期`),
@@ -39,10 +37,11 @@ const lifecycles = {
   deactivated: (appWindow) => console.log(`${appWindow.__WUJIE.id} deactivated 生命周期`),
   loadError: (url, e) => console.log(`${url} 加载失败`, e)
 };
-
+const urls = window.appConfig.iframe_url;
+const href = location.href.split('#')[0]
 setupApp({
-  name: '/dist1',
-  url: 'http://localhost:9083',
+  name: urls[0],
+  url: href + urls[0] + '/',
   exec: true,
   props,
   alive: true,
