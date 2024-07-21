@@ -1,5 +1,7 @@
 <template>
-  <WujieVue width="100%" height="100%" :name="currentProject"></WujieVue>
+  <div class="p-3 flex-1 bg-[#f3f7f9] overflow-auto" >
+    <WujieVue :name="currentProject"></WujieVue>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -24,3 +26,4 @@ watchEffect(() => {
   wujieVue.bus.$emit("vue3-router-change", `${route.fullPath}`);
 })
 </script>
+<style scoped></style>

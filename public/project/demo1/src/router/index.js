@@ -8,7 +8,13 @@ import { createRouter, createWebHashHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    redirect: "/dialog",
+    redirect: "/Home",
+  },
+  {
+    path: "/home",
+    name: "Home",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Index.vue"),
   },
   {
     path: "/dialog",
@@ -16,18 +22,18 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Dialog.vue"),
   },
-  // {
-  //   path: "/location",
-  //   name: "Location",
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/Location.vue"),
-  // },
-  // {
-  //   path: "/contact",
-  //   name: "Contact",
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/Communication.vue"),
-  // },
+  {
+    path: "/location",
+    name: "Location",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Location.vue"),
+  },
+  {
+    path: "/contact",
+    name: "Contact",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Contact.vue"),
+  },
   { path: "/:catchAll(.*)", component: () => import("@/views/Home.vue") },
 ];
 

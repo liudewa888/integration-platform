@@ -22,7 +22,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         // 选项写法
-        target: 'http://localhost:9082',
+        target: 'http://www.yztpsg.cn/integration',
         changeOrigin: true,
         rewrite: (path) => {
           path = path.replace(/^\/api/, '');

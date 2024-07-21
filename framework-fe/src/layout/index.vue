@@ -5,7 +5,7 @@
       <Sidebar></Sidebar>
       <div class="flex-1 h-full flex flex-col">
         <Breadcrumb />
-        <RouterView class="p-3 flex-1 bg-[#f3f7f9]" />
+        <RouterView/>
       </div>
     </div>
   </div>

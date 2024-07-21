@@ -38,6 +38,7 @@ const transformProperty = (item) => {
   item.ParentID = item.parent_id;
   item.FuncCode = item.menu_id;
   item.SeqNo = item.menu_order;
+  item.menuOrder = item.menu_order;
   item.FuncType = item.menu_type;
   item.Url = item.menu_url;
   item.FuncName = item.menu_name;
@@ -55,6 +56,9 @@ const filterAsyncRoutes = (data, rootID) => {
 
   const build = (parentId) => {
     if (tree[parentId]) {
+      tree[parentId].sort((a, b) => {
+        return a.menuOrder - b.menuOrder;
+      });
       return tree[parentId].map((item) => {
         const node = {};
         node.path = item.Url || '';
@@ -63,6 +67,7 @@ const filterAsyncRoutes = (data, rootID) => {
         node.parentID = item.ParentID;
         node.title = item.FuncName;
         node.id = item.FuncCode;
+        node.menuOrder = item.SeqNo;
         node.meta = {
           seqNo: item.SeqNo,
           title: item.FuncName || '',
@@ -105,19 +110,11 @@ const generateRoutes = async () => {
     let topMenus = [];
     let leftMenus = [];
     if (menuData && menuData.length) {
-      accessedRoutes = filterAsyncRoutes(menuData, MenuTopID).sort((a, b) => {
-        return a.meta.seqNo - b.meta.seqNo;
-      });
-      leftMenus = accessedRoutes.map((item) =>
-        item.children.sort((a, b) => {
-          return a.meta.seqNo - b.meta.seqNo;
-        })
-      );
+      accessedRoutes = filterAsyncRoutes(menuData, MenuTopID);
+      leftMenus = accessedRoutes.map((item) => item.children);
     }
     if (topMenuData && topMenuData.length) {
-      topMenus = filterAsyncRoutes(topMenuData, MenuTopID).sort((a, b) => {
-        return a.meta.seqNo - b.meta.seqNo;
-      });
+      topMenus = filterAsyncRoutes(topMenuData, MenuTopID);
     }
     resolve({ menus: accessedRoutes, leftMenus, topMenus });
   });
@@ -198,6 +195,8 @@ router.beforeEach(async (to, from, next) => {
         next('/noMenuAccess');
         return;
       }
+      console.log(res.leftMenus, 'menus');
+
       menusStore.setMenus(res.menus);
       menusStore.setTopMenus(res.topMenus);
       menusStore.setLeftMenus(res.leftMenus);

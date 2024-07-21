@@ -54,7 +54,7 @@ $('#dialog_menu_role').on('show.bs.modal', function (event) {
                 new Noty({
                     type: 'error',
                     layout: 'topCenter',
-                    text: result.msg || '获取菜单角色失败',
+                    text: result.msg || '获取角色菜单失败',
                     timeout: '5000'
                 }).show();
                 $('#dialog_menu_role').modal('hide');
@@ -94,14 +94,14 @@ $('#dialog_menu_role').find('.modal-footer #saveMenuRole').click(function () {
                 new Noty({
                     type: 'error',
                     layout: 'topCenter',
-                    text: result.msg || '菜单角色保存失败',
+                    text: result.msg || '角色菜单保存失败',
                     timeout: '5000'
                 }).show();
             } else {
                 new Noty({
                     type: 'success',
                     layout: 'topCenter',
-                    text: '菜单角色保存成功',
+                    text: '角色菜单保存成功',
                     timeout: '5000'
                 }).show();
                 $('#dialog_menu_role').modal('hide');

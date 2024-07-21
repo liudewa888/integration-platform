@@ -2,7 +2,6 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router';
-
 import WujieVue from 'wujie-vue3';
 import ElementPlus from 'element-plus';
 import { vueErrorHandler } from '@/utils/errorHandler';
@@ -16,17 +15,13 @@ bus.$on('click', (msg) => window.alert(msg));
 
 // 在 xxx-sub 路由下子应用将激活路由同步给主应用，主应用跳转对应路由高亮菜单栏
 bus.$on('sub-route-change', (name, path) => {
-  const mainName = `${name}-sub`;
-  const mainPath = `/${name}-sub${path}`;
-  const currentName = router.currentRoute.name;
-  const currentPath = router.currentRoute.path;
-  if (mainName === currentName && mainPath !== currentPath) {
-    router.push({ path: mainPath });
+  const currentPath = router.currentRoute.value.path;
+  if (path !== currentPath) {
+    router.push(path);
   }
 });
 const props = {
   jump: (name) => {
-    console.log(name, 'jump');
     router.push(name);
   }
 };
