@@ -1,9 +1,5 @@
-import { defineAsyncComponent } from "vue";
-import { createRouter, createWebHashHistory } from "vue-router";
-
-// const _import = (path) => {
-//   return defineAsyncComponent(() => import(`../view/${path}.vue`));
-// };
+import Vue from "vue";
+import VueRouter from "vue-router";
 
 const routes = [
   {
@@ -37,9 +33,8 @@ const routes = [
   { path: "/:catchAll(.*)", component: () => import("@/views/Home.vue") },
 ];
 
-const router = createRouter({
-  history: createWebHashHistory(),
+const router = new VueRouter({
   routes,
 });
-
+Vue.use(VueRouter);
 export { router };

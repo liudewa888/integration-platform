@@ -38,10 +38,19 @@ const lifecycles = {
   loadError: (url, e) => console.log(`${url} 加载失败`, e)
 };
 const urls = window.appConfig.iframe_url;
-const href = location.href.split('#')[0]
+const href = location.href.split('#')[0];
 setupApp({
   name: urls[0],
   url: href + urls[0] + '/',
+  exec: true,
+  props,
+  alive: true,
+  ...lifecycles
+});
+
+setupApp({
+  name: urls[1],
+  url: href + urls[1] + '/',
   exec: true,
   props,
   alive: true,
