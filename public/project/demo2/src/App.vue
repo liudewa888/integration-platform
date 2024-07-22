@@ -13,9 +13,14 @@
 export default {
   watch: {
     $route() {
-      window.$wujie?.bus.$emit("sub-route-change", "vue2", this.$route.path);
+      window.$wujie?.bus.$emit("sub-route-change", "/dist2", this.$route.path);
     },
   },
+  mounted() {
+    window.$wujie?.bus.$on("vue3-router-change", (path) => {
+      this.$router.push(path)
+    });
+  }
 };
 </script>
 
