@@ -34,6 +34,12 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Contact.vue"),
   },
+  {
+    path: "/postMessage",
+    name: "PostMessage",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/PostMessage.vue"),
+  },
   { path: "/:catchAll(.*)", component: () => import("@/views/Home.vue") },
 ];
 

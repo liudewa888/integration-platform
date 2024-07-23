@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="nav">
+    <div class="nav" v-if="$route.path !== '/postMessage'">
       <router-link to="/home">首页</router-link> |
       <router-link to="/dialog">弹窗</router-link> |
       <router-link to="/location">路由</router-link> |
@@ -18,9 +18,9 @@ export default {
   },
   mounted() {
     window.$wujie?.bus.$on("vue3-router-change", (path) => {
-      this.$router.push(path)
+      this.$router.push(path);
     });
-  }
+  },
 };
 </script>
 

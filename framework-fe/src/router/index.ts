@@ -26,6 +26,10 @@ const router = createRouter({
       component: Layout,
       children: [
         {
+          path: '/postMessage',
+          component: () => import('@/views/PostMessage')
+        },
+        {
           path: '/:catchAll(.*)',
           component: () => import('@/views/Home')
         }
