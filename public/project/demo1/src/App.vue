@@ -18,7 +18,7 @@ watch(
   () => route.path,
   (n) => {
     if (n) {
-      window.$wujie?.bus.$emit("sub-route-change", "/dist1", n);
+      window.$wujie?.bus.$emit("sub-route-change", "dist1", n);
     }
   }
 );

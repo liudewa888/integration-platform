@@ -24,6 +24,7 @@ export default defineConfig({
       '/api': {
         // 选项写法
         target: 'http://www.yztpsg.cn/integration',
+        // target: 'http://localhost:9082',
         changeOrigin: true,
         rewrite: (path) => {
           path = path.replace(/^\/api/, '');

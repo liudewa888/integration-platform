@@ -13,7 +13,7 @@
 export default {
   watch: {
     $route() {
-      window.$wujie?.bus.$emit("sub-route-change", "/dist2", this.$route.path);
+      window.$wujie?.bus.$emit("sub-route-change", "dist2", this.$route.path);
     },
   },
   mounted() {

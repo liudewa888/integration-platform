@@ -67,7 +67,6 @@ app.post("/admin/login", async (req, res) => {
     let sql = `SELECT * FROM bs_user WHERE user_name = '${data.uname}' AND is_del=0`;
     connection.query(sql, (err, result) => {
       if (!err) {
-        //若存在结果则表示登陆成功
         if (result[0]) {
           const user = result[0];
           const salt = user.salt;
@@ -76,23 +75,33 @@ app.post("/admin/login", async (req, res) => {
             res.send(responseFormat(409, [], "用户名或密码错误"));
             return;
           }
-          const key = data.uname + getTimeSpan();
-          const token = generateAccessToken({ uname: data.uname }, key);
-          sql = `UPDATE bs_user SET token_key = '${key}', token='${token}' WHERE user_name = '${data.uname}'`;
-          connection.query(sql, (err, result) => {
-            connection.release();
+          const userInfo = {
+            token: null,
+            userName: user.user_name,
+            name: user.name,
+            admin: 0,
+            id: user.id,
+          };
+          jwt.verify(user.token, user.token_key, (err, decoded) => {
             if (!err) {
-              const userInfo = {
-                token,
-                userName: user.user_name,
-                name: user.name,
-                admin: 0,
-                id: user.id,
-              };
-              res.send(responseFormat(200, userInfo));
-            } else {
-              res.send(responseFormat(409, [], err.sqlMessage));
+              const time = getTimeSpan();
+              if (time < decoded.exp) {
+                userInfo.token = user.token;
+                return res.send(responseFormat(200, userInfo));
+              }
             }
+            const key = data.uname + getTimeSpan();
+            const token = generateAccessToken({ uname: data.uname }, key);
+            sql = `UPDATE bs_user SET token_key = '${key}', token='${token}' WHERE user_name = '${data.uname}'`;
+            connection.query(sql, (err, result) => {
+              connection.release();
+              if (!err) {
+                userInfo.token = token;
+                res.send(responseFormat(200, userInfo));
+              } else {
+                res.send(responseFormat(409, [], err.sqlMessage));
+              }
+            });
           });
         } else {
           res.send(responseFormat(409, [], "用户名不存在"));

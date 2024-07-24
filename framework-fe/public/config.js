@@ -1,6 +1,6 @@
 window.appConfig = {
   baseURL: 'http://10.1.12.100:33355/', // 开发
-  iframe_url: ['/dist1', '/dist2', '/dist3', '/dist4'], // 生产环境
+  iframe_url: ['dist1', 'dist2', 'dist3', 'dist4'], // 生产环境
   funcCode: 'big_data',
   systemCode: '411', // 所属的系统ID(system_code)
   MenuTopID: '144', // 顶级菜单ID(系统的菜单ID) 开发

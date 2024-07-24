@@ -10,7 +10,7 @@
       <el-button @click="() => postMessageToVue3()">发送消息给vue2子应用的iframe</el-button>
     </div>
     <div class="sub-content">
-      <WujieVue name="/dist2"></WujieVue>
+      <WujieVue name="dist2"></WujieVue>
     </div>
   </div>
 </template>
@@ -26,13 +26,13 @@ export default {
   },
   methods: {
     postMessageToVue2(message) {
-      const subAppWindow = window.document.querySelector('iframe[name="/dist2"]').contentWindow;
+      const subAppWindow = window.document.querySelector('iframe[name="dist2"]').contentWindow;
       const data = message || { type: 'vue2', message: "hello, i'm main app" };
       subAppWindow.postMessage(JSON.stringify(data), '*');
     },
     postMessageToVue3(message) {
       const iframeWindow = window.document
-        .querySelector("wujie-app[data-wujie-id='/dist2']")
+        .querySelector("wujie-app[data-wujie-id='dist2']")
         .shadowRoot.querySelector('iframe').contentWindow;
       const data = message || { type: 'vue3', message: "hello, i'm main app" };
       iframeWindow.postMessage(JSON.stringify(data), '*');

@@ -18,7 +18,8 @@ export default {
   data() {
     return {
       message: "",
-      url: "http://localhost:9083/#/postMessage",
+      // url: "http://localhost:9083/#/postMessage",
+      url: "./dist1/#/postMessage",
     };
   },
   methods: {

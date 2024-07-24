@@ -41,8 +41,8 @@ const urls = window.appConfig.iframe_url;
 const href = location.href.split('#')[0];
 setupApp({
   name: urls[0],
-  // url: href + urls[0] + '/',
-  url: 'http://localhost:9083',
+  url: href + urls[0] + '/',
+  // url: 'http://localhost:9083',
   exec: true,
   props,
   alive: true,
@@ -51,8 +51,8 @@ setupApp({
 
 setupApp({
   name: urls[1],
-  // url: href + urls[1] + '/',
-  url: 'http://localhost:9084',
+  url: href + urls[1] + '/',
+  // url: 'http://localhost:9084',
   exec: true,
   props,
   alive: true,
