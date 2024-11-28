@@ -23,11 +23,11 @@ export default defineConfig({
     proxy: {
       '/api': {
         // 选项写法
-        target: 'http://www.yztpsg.cn/integration',
+        target: 'http://liudewa.cc/integration',
         // target: 'http://localhost:9082',
         changeOrigin: true,
         rewrite: (path) => {
-          path = path.replace(/^\/api/, '');
+          // path = path.replace(/^\/api/, '');
           // 进行调试输出
           console.log('vite proxy url: ', path);
           return path;
