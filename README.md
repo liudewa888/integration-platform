@@ -3,7 +3,7 @@
 - 管理端: 权限管理，用户管理，菜单管理, 用户角色管理, 角色菜单管理
 ## framework-fe(前端)
 ### 演示demo
-- [地址](http://www.yztpsg.cn/integration/)
+- [地址](http://liudewa.cc/integration/)
 - 账号: knt2 密码: 123
 #### 效果图
 - ![图1](./public/images/framework-1.png)
@@ -18,7 +18,7 @@
 
 ## management-be(后台管理)
 ### 演示demo
-- [地址](http://www.yztpsg.cn:9081/)
+- [地址](http://liudewa.cc:8005/)
 - 账号: test 密码: test(账号,只有分配权限)
 #### 效果图
 - ![图3](./public/images/manage-1.png)
@@ -36,7 +36,7 @@
 
 ## server-be(后端接口)
 ### 接口代理地址
-- [地址](http://www.yztpsg.cn/integration)
+- [地址](http://liudewa.cc/integration)
 ### 技术
 - node + express + mysql
 ### 已完成接口
