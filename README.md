@@ -18,7 +18,7 @@
 
 ## management-be(后台管理)
 ### 演示demo
-- [地址](http://liudewa.cc:8005/)
+- [地址](http://liudewa.cc:8003/)
 - 账号: test 密码: test(账号,只有分配权限)
 #### 效果图
 - ![图3](./public/images/manage-1.png)
@@ -36,7 +36,7 @@
 
 ## server-be(后端接口)
 ### 接口代理地址
-- [地址](http://liudewa.cc/integration)
+- [地址](http://liudewa.cc:8005)
 ### 技术
 - node + express + mysql
 ### 已完成接口
